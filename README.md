@@ -25,7 +25,7 @@ Character move speed without modifiers is **3**.
 
 Some speed up buff adds extra **2** speed.
 
-But also there some debuff which really slows down character, its speed value **-4**.
+But also there is some debuff which really slows down character, its speed value **-4**.
 
 So, final value (returned by the API) of character speed is **1** (3 + 2 + (-4)).
 
@@ -45,7 +45,11 @@ Right click in the Project window -> Modifiers -> New modifier.
 Next, you're need to add required params to the list in this modifier.
 
 ### How to create buff?
-Coming soon.
+Right click in the Project window -> Modifiers -> New buff.
+
+Setup buff parameters, add buff modifiers.
+
+You can create your own buff class (derived from Buff) and add there your info, it can be icon, text id or something other.
 
 ## Example
 You can find it in the Example folder, there is a sample scene.
