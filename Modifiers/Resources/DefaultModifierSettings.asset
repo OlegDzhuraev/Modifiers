@@ -9,9 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: b7ec916645f246b48c6ad29092a1df78, type: 3}
   m_Name: DefaultModifierSettings
   m_EditorClassIdentifier: Assembly-CSharp:InsaneOne.Modifiers:DefaultModifierSettings
-  parameters:
-  - Type: 0
-    Value: 100
+  parameters: []
