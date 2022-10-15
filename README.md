@@ -20,6 +20,7 @@ You can access Modifable parameters with a simple API and get values of your par
 All these parameters can be edited or added/removed at all without any code and project recompile. 
 
 **Modifiers work example:**
+
 Character move speed without modifiers is **3**.
 
 Some speed up buff adds extra **2** speed.
