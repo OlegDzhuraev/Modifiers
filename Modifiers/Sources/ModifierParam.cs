@@ -1,7 +1,7 @@
 namespace InsaneOne.Modifiers
 {
 	[System.Serializable]
-	public class ModifierParam
+	public struct ModifierParam
 	{
 		public ModifierType Type;
 		public float Value;

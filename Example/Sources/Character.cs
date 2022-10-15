@@ -2,7 +2,7 @@ using System;
 using InsaneOne.Modifiers;
 using UnityEngine;
 
-namespace Example.Sources
+namespace InsaneOne.Modifiers.Example
 {
 	public class Character : MonoBehaviour
 	{

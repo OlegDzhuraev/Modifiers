@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Example.Sources
+namespace InsaneOne.Modifiers.Example
 {
 	public class ExampleOutput : MonoBehaviour
 	{
