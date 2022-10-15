@@ -17,13 +17,16 @@ There also **Modifable** class, which you can add for your character/weapon/etc.
 
 You can access Modifable parameters with a simple API and get values of your params - it automatically will summarize all modifiers, added to this object, and return final value, actual for this param.
 
-**Example:**
-Character move speed is 3.
-Some speed up buff adds extra 2 speed.
-But also there some debuff which really slows down character, its speed value -4.
-So, final value (returned by an API) of character speed is 3 + 2 + (-4) == 1.
-
 All these parameters can be edited or added/removed at all without any code and project recompile. 
+
+**Modifiers work example:**
+Character move speed without modifiers is **3**.
+
+Some speed up buff adds extra **2** speed.
+
+But also there some debuff which really slows down character, its speed value **-4**.
+
+So, final value (returned by the API) of character speed is **1** (3 + 2 + (-4)).
 
 ## How to install
 Download repo as source code, unpack to your project. Also you can check Releases for unitypackage.
