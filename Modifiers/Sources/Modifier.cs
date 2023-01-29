@@ -9,20 +9,25 @@ namespace InsaneOne.Modifiers
 	{
 		[SerializeField] List<ModifierParam> parameters = new List<ModifierParam>();
 
-		public float GetValue(ModifierType type) => GetParam(type).Value;
-		public bool IsTrue(ModifierType type) => GetParam(type).Value > 0;
+		public float GetValue(ModType type) => GetParam(type).Value;
+		public bool IsTrue(ModType type) => GetParam(type).Value > 0;
 
-		ModifierParam GetParam(ModifierType type)
+		internal List<ModifierParam> GetAllValues() => parameters;
+
+		ModifierParam GetParam(ModType type)
 		{
 			foreach (var modifierParam in parameters)
 				if (modifierParam.Type == type)
 					return modifierParam;
 
-			var defaultValues = DefaultModifierSettings.Get();
+			if (GetType() != typeof(DefaultModifierSettings))
+			{
+				var defaultValues = DefaultModifierSettings.Get();
 
-			if (defaultValues)
-				return defaultValues.GetParam(type);
-			
+				if (defaultValues)
+					return defaultValues.GetParam(type);
+			}
+
 			throw new NullReferenceException($"No {type} param found.");
 		}
 	}

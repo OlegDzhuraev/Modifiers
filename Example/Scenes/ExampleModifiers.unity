@@ -702,7 +702,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -20, y: -20}
-  m_SizeDelta: {x: 340, y: 180}
+  m_SizeDelta: {x: 432, y: 180}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &2136011303
 MonoBehaviour:
@@ -737,7 +737,10 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Press LMB to damage character
+  m_Text: 'This is a simple text simulation of an 1 vs 1 fight.
+
+    Press LMB to
+    damage character.'
 --- !u!222 &2136011304
 CanvasRenderer:
   m_ObjectHideFlags: 0
