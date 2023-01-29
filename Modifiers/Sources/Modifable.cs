@@ -11,6 +11,8 @@ namespace InsaneOne.Modifiers
 		public event Action WasChanged;
 		
 		[SerializeField] Modifier defaultModifier;
+
+		public Modifier DefaultModifier => defaultModifier;
 		
 		readonly List<Modifier> modifiers = new List<Modifier>();
 		readonly Dictionary<ModType, float> values = new Dictionary<ModType, float>();
