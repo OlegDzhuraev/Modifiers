@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,26 +8,50 @@ namespace InsaneOne.Modifiers
 	{
 		[SerializeField] List<ModifierParam> parameters = new List<ModifierParam>();
 
-		public float GetValue(ModType type) => GetParam(type).Value;
-		public bool IsTrue(ModType type) => GetParam(type).Value > 0;
+		[Tooltip("If set, will load values from Fallback if no value found? If there no Fallback, returns Param with value == 0. Dont make recursive fallback modifiers.")]
+		[SerializeField] Modifier fallback;
 
-		internal List<ModifierParam> GetAllValues() => parameters;
+		public Modifier Fallback => fallback;
 
-		ModifierParam GetParam(ModType type)
+		public float GetValue(ModType type) => GetParamValue(type);
+		public bool IsTrue(ModType type) => GetParamValue(type) > 0;
+
+		internal List<ModifierParam> GetAllValues()
+		{
+			if (!fallback)
+				return parameters;
+			
+			var result = new List<ModifierParam>(parameters);
+			var toAdd = new List<ModifierParam>(fallback.parameters);
+
+			for (var i = toAdd.Count - 1; i >= 0; i--)
+			{
+				var toAddParam = toAdd[i];
+				var needToAdd = true;
+
+				foreach (var existingParam in result)
+					if (existingParam.Type == toAddParam.Type)
+					{
+						needToAdd = false;
+						break;
+					}
+				
+				if (!needToAdd)
+					toAdd.Remove(toAddParam);
+			}
+
+			result.AddRange(toAdd);
+			
+			return result;
+		}
+
+		internal float GetParamValue(ModType type)
 		{
 			foreach (var modifierParam in parameters)
 				if (modifierParam.Type == type)
-					return modifierParam;
-
-			if (GetType() != typeof(DefaultModifierSettings))
-			{
-				var defaultValues = DefaultModifierSettings.Get();
-
-				if (defaultValues)
-					return defaultValues.GetParam(type);
-			}
-
-			throw new NullReferenceException($"No {type} param found.");
+					return modifierParam.Value;
+			
+			return fallback ? fallback.GetValue(type) : 0;
 		}
 	}
 }
