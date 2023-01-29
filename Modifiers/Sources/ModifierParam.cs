@@ -3,7 +3,7 @@ namespace InsaneOne.Modifiers
 	[System.Serializable]
 	public struct ModifierParam
 	{
-		public ModifierType Type;
+		public ModType Type;
 		public float Value;
 	}
 }

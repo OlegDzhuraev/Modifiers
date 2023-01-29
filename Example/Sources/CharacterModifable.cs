@@ -1,7 +1,6 @@
-using InsaneOne.Modifiers;
 using UnityEngine;
 
-namespace Example.Sources
+namespace InsaneOne.Modifiers.Example
 {
 	// Alternative variation with usage of the ready-made Modifable component.
 	// In this variation there is no inner variable named health, it is moved to an whole object scope.

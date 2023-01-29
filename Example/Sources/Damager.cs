@@ -14,12 +14,12 @@ namespace InsaneOne.Modifiers.Example
 			if (!Input.GetMouseButtonDown(0))
 				return;
 			
-			var damage = data.GetValue(ModifierType.Damage);
+			var damage = data.GetValue(ModType.Damage);
 			var isCritical = false;
 
-			if (data.IsTrue(ModifierType.CriticalChance))
+			if (data.IsTrue(ModType.CriticalChance))
 			{
-				var criticalChance = data.GetValue(ModifierType.CriticalChance);
+				var criticalChance = data.GetValue(ModType.CriticalChance);
 				isCritical = Random.Range(0f, 1f) < criticalChance;
 			}
 

@@ -1,5 +1,4 @@
 using System;
-using InsaneOne.Modifiers;
 using UnityEngine;
 
 namespace InsaneOne.Modifiers.Example
@@ -16,7 +15,7 @@ namespace InsaneOne.Modifiers.Example
 
 		void Start()
 		{
-			SetHealth(data.GetValue(ModifierType.MaxHealth));
+			SetHealth(data.GetValue(ModType.MaxHealth));
 		}
 
 		void Update()
@@ -26,12 +25,12 @@ namespace InsaneOne.Modifiers.Example
 			if (timer > 0)
 				return;
 
-			if (Health < data.GetValue(ModifierType.MaxHealth))
+			if (Health < data.GetValue(ModType.MaxHealth))
 			{
-				var regenValue = data.GetValue(ModifierType.Regeneration);
-				SetHealth(Health + regenValue);
+				var regen = data.GetValue(ModType.Regeneration);
+				SetHealth(Health + regen);
 
-				GameStateLog.Log($"<color=#99ff99>Character regenerated {regenValue} HP</color>");
+				GameStateLog.Log($"<color=#99ff99>Character regenerated {regen} HP</color>");
 			}
 
 			timer = 1f;
@@ -39,12 +38,12 @@ namespace InsaneOne.Modifiers.Example
 
 		public void TakeDamage(float value)
 		{
-			SetHealth(Health - value / data.GetValue(ModifierType.Defense));
+			SetHealth(Health - value / data.GetValue(ModType.Defense));
 		}
 
 		void SetHealth(float value)
 		{
-			Health = Mathf.Clamp(value, 0f, data.GetValue(ModifierType.MaxHealth));
+			Health = Mathf.Clamp(value, 0f, data.GetValue(ModType.MaxHealth));
 
 			HealthChanged?.Invoke(Health);
 		}
