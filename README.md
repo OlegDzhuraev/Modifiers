@@ -50,6 +50,80 @@ Right click in the Project window -> Modifiers -> New buff.
 Setup buff parameters, add buff modifiers.
 
 You can create your own buff class (derived from Buff) and add there your info, it can be icon, text id or something other.
+## Code usage
+### Adding and removing modifiers
+This is one of the most common actions. You add and remove stats for your characters etc regularly.
+```cs 
+[SerializeField] Modifier modifier;
+
+void Start() 
+{
+  // This and below code uses custom extensions methods
+    
+  // Add
+  gameObject.AddModifier(modifier);
+    
+  // Remove (note that if you instance modifier, by remove method you will be able to remove only modifiers, same to instance, not the original one).
+  gameObject.RemoveModifier(modifier);
+}
+```
+
+### Get actual value
+This is another most common action. To handle any values, you need to get them somehow. This example shows, how it done in this extension.
+```cs
+// Getting value of Max Health param
+gameObject.GetModifierValue(ModType.MaxHealth);
+```
+
+### Tags
+If you need to tag object and check if object have some tags, you can use these methods.
+Tags are just simple numbers like other stats, but these methods allows to work with them easily and make code more short.
+
+```cs
+gameObject.AddTag(ModType.TagA);
+
+if (gameObject.HasTag(ModType.TagA))
+{
+  // do something
+}
+
+// checking for multiple tags, AND condition example
+if (gameObject.HasAllTags(ModType.TagA, ModType.TagB))
+{
+  // do something if there all on the object
+}
+
+// OR condition example
+if (gameObject.HasAnyTags(ModType.TagA, ModType.TagB))
+{
+  // do something if there at least one tag of the listed above.
+}
+```
+
+
+### Make Filter and get results
+```cs
+// making filter which will filter all objects with team 1
+
+Filter filter;
+
+void Start() 
+{
+  filter = Filter.Make(ModType.Team, 1);
+}
+
+void Update() 
+{
+  var results = filter.GetResults();
+  
+  foreach (GameObject teamedGo in results)
+  {
+    // you can do something with result objects
+  }
+}
+```
+
+Other usage examples can be found in the Example folder.
 
 ## Example
 You can find it in the Example folder, there is a sample scene.
