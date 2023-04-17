@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,17 +7,32 @@ namespace InsaneOne.Modifiers
 	[CreateAssetMenu(fileName = "NewModifier", menuName = "Modifiers/New modifier")]
 	public class Modifier : ScriptableObject
 	{
-		[SerializeField] List<ModifierParam> parameters = new List<ModifierParam>();
+		[SerializeField] protected List<ModifierParam> parameters = new List<ModifierParam>();
 
 		[Tooltip("If set, will load values from Fallback if no value found? If there no Fallback, returns Param with value == 0. Dont make recursive fallback modifiers.")]
 		[SerializeField] Modifier fallback;
 
 		public Modifier Fallback => fallback;
 
+		[NonSerialized] readonly Dictionary<int, float> initializedParams = new ();
+		[NonSerialized] bool isInitialized;
+		
+		/// <summary> Use it when before working with modifier. Use only on instances! Keep in mind, that instancing is not recommended, since instance is unique modifier and can be removed by reference of its template after.</summary>
+		public void Init()
+		{
+			if (isInitialized)
+				return;
+					
+			foreach (var param in parameters)
+				initializedParams.Add((int)param.Type, param.Value);
+
+			isInitialized = true;
+		}
+
 		public float GetValue(ModType type) => GetParamValue(type);
 		public bool IsTrue(ModType type) => GetParamValue(type) > 0;
 
-		internal List<ModifierParam> GetAllValues()
+		public List<ModifierParam> GetAllValuesInternal()
 		{
 			if (!fallback)
 				return parameters;
@@ -47,6 +63,9 @@ namespace InsaneOne.Modifiers
 
 		internal float GetParamValue(ModType type)
 		{
+			if (isInitialized && initializedParams.TryGetValue((int)type, out var initResult))
+				return initResult;
+			
 			foreach (var modifierParam in parameters)
 				if (modifierParam.Type == type)
 					return modifierParam.Value;

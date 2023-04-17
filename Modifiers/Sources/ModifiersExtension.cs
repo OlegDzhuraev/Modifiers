@@ -17,6 +17,7 @@ namespace InsaneOne.Modifiers
 		public static void RemoveModifier(this GameObject go, Modifier modifier) => Get(go).Remove(modifier);
 		
 		public static float GetModifierValue(this GameObject go, ModType type) => Get(go).GetValue(type);
+		public static int GetIntModifierValue(this GameObject go, ModType type) => (int)go.GetModifierValue(type);
 		public static bool IsModifierValueTrue(this GameObject go, ModType type) => Get(go).GetValue(type) > 0;
 		public static void AddModifierValue(this GameObject go, ModType type, float value) => Get(go).AddValue(type, value);
 		public static void SetModifierValue(this GameObject go, ModType type, float value) => Get(go).SetValue(type, value);

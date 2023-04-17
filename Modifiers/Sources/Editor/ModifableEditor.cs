@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 
@@ -24,9 +25,11 @@ namespace InsaneOne.Modifiers.Dev
 			
 			foreach (var kvp in values)
 			{
-				GUILayout.Label($"{kvp.Key} = {kvp.Value}", EditorStyles.boldLabel);
+				GUILayout.Label($"{(ModType)kvp.Key} = {kvp.Value}", EditorStyles.boldLabel);
 				GUILayout.Space(5);
 			}
 		}
 	}
 }
+
+#endif

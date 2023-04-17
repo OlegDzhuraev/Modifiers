@@ -10,7 +10,10 @@ namespace InsaneOne.Modifiers
 		public static DefaultModifierSettings Get()
 		{
 			if (!instance)
+			{
 				instance = Resources.Load<DefaultModifierSettings>("DefaultModifierSettings");
+				instance.Init();
+			}
 
 			return instance;
 		}

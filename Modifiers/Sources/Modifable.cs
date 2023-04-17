@@ -7,6 +7,7 @@ namespace InsaneOne.Modifiers
 	public class Modifable : MonoBehaviour
 	{
 		internal static readonly Dictionary<GameObject, Modifable> all = new Dictionary<GameObject, Modifable>();
+		static readonly List<GameObject> searchLsit = new List<GameObject>();
 		
 		public event Action WasChanged;
 		
@@ -17,18 +18,26 @@ namespace InsaneOne.Modifiers
 		public Modifier DefaultModifier => defaultModifier;
 		
 		readonly List<Modifier> modifiers = new List<Modifier>();
-		readonly Dictionary<ModType, float> values = new Dictionary<ModType, float>();
+		readonly Dictionary<int, float> values = new ();
 
-		readonly Dictionary<ModType, List<Action<float>>> subscriptions = new Dictionary<ModType, List<Action<float>>>();
+		readonly Dictionary<int, List<Action<float>>> subscriptions = new ();
+
+		bool isInitialized;
 
 		void Awake()
 		{
 			all.Add(gameObject, this);
-			
+
 			if (defaultModifier)
-				Add(defaultModifier);
-			
+			{
+				var instanced = Instantiate(defaultModifier);
+				instanced.Init();
+				Add(instanced);
+			}
+
 			Filter.InjectInAll(gameObject);
+
+			isInitialized = true;
 		}
 
 		void OnDestroy()
@@ -43,14 +52,14 @@ namespace InsaneOne.Modifiers
 
 		void OnValueChange(ModType type, float value)
 		{
-			if (subscriptions.TryGetValue(type, out var list))
+			if (subscriptions.TryGetValue((int)type, out var list))
 				for (var i = list.Count - 1; i >= 0; i--)
 					list[i]?.Invoke(value);
 		}
 		
 		public void Add(Modifier modifier)
 		{
-			var modifierParams = modifier.GetAllValues();
+			var modifierParams = modifier.GetAllValuesInternal();
 			
 			foreach (var param in modifierParams)
 				AddValue(param.Type, param.Value);
@@ -64,11 +73,11 @@ namespace InsaneOne.Modifiers
 			if (!modifiers.Contains(modifier))
 				return;
 			
-			var modifierParams = modifier.GetAllValues();
-			
+			var modifierParams = modifier.GetAllValuesInternal();
+
 			foreach (var param in modifierParams)
-				values[param.Type] -= param.Value;
-			
+				SetValue(param.Type, values[(int)param.Type] - param.Value);
+
 			modifiers.Remove(modifier);
 			WasChanged?.Invoke();
 		}
@@ -76,28 +85,35 @@ namespace InsaneOne.Modifiers
 		/// <summary> Sets value to the specified field. Overrides all applied modifiers (can cause wrong results if you will remove some added modifiers after setting custom value, so, be careful). </summary>
 		public void SetValue(ModType type, float value)
 		{
-			values[type] = value;
+			values[(int)type] = value;
 			
 			OnValueChange(type, value);
 		}
 
 		public void AddValue(ModType type, float value)
 		{
-			if (values.ContainsKey(type))
-				values[type] += value;
+			if (values.ContainsKey((int)type))
+				SetValue(type, values[(int)type] + value);
 			else
 				SetValue(type, value);
 		}
 		
-		public float GetValue(ModType type) => values.TryGetValue(type, out var result) ? result : GetDefault(type, useDefaultIfNoValue);
+		public float GetValue(ModType type)
+		{
+			if (!isInitialized)
+				return defaultModifier ? defaultModifier.GetValue(type) : GetDefault(type, useDefaultIfNoValue);
+			
+			return values.TryGetValue((int)type, out var result) ? result : GetDefault(type, useDefaultIfNoValue);
+		}
+
 		public bool IsTrue(ModType type) => GetValue(type) > 0;
 
 		public void SubTo(ModType type, Action<float> action)
 		{
-			if (!subscriptions.TryGetValue(type, out var list))
+			if (!subscriptions.TryGetValue((int)type, out var list))
 			{
 				list = new List<Action<float>>();
-				subscriptions[type] = list;
+				subscriptions[(int)type] = list;
 			}
 			
 			list.Add(action);
@@ -105,11 +121,11 @@ namespace InsaneOne.Modifiers
 		
 		public void UnsubFrom(ModType type, Action<float> action)
 		{
-			if (subscriptions.TryGetValue(type, out var list))
+			if (subscriptions.TryGetValue((int)type, out var list))
 				list.Remove(action);
 		}
 
-		public Dictionary<ModType, float> GetAllValuesInternal() => values;
+		public Dictionary<int, float> GetAllValuesInternal() => values;
 		
 		static float GetDefault(ModType type, bool useDefault)
 		{
@@ -124,15 +140,15 @@ namespace InsaneOne.Modifiers
 			return 0;
 		}
 
-		internal static List<GameObject> FindAllWith(ModType type, int value)
+		internal static List<GameObject> FindAllWith(ModType type, float value, float tolerance = 0.01f)
 		{
-			var result = new List<GameObject>();
+			searchLsit.Clear();
 
 			foreach (var state in all)
-				if ((int) state.Value.GetValue(type) == value) // && state.gameObject.activeInHierarchy
-					result.Add(state.Key);
+				if (Math.Abs(state.Value.GetValue(type) - value) < tolerance) // && state.gameObject.activeInHierarchy
+					searchLsit.Add(state.Key);
 			
-			return result;
+			return searchLsit;
 		}
 
 		public static void Init() => all.Clear();

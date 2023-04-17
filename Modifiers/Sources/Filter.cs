@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,17 +9,20 @@ namespace InsaneOne.Modifiers
 		internal static readonly List<Filter> filters = new ();
 		
 		public ModType ParamType { get; }
-		public int Value { get; }
+		public float Value { get; }
+		public bool IsExclude { get; private set; }
+
+		float compareTolerance = 0.01f;
 
 		readonly List<GameObject> all = new ();
 		readonly List<GameObject> activeResults = new ();
 		
-		Filter(ModType param, int value)
+		Filter(ModType param, float value)
 		{
 			ParamType = param;
 			Value = value;
 
-			var results = Modifable.FindAllWith(param, value);
+			var results = Modifable.FindAllWith(param, value, compareTolerance);
 			foreach (var go in results)
 				all.Add(go);
 
@@ -38,27 +42,25 @@ namespace InsaneOne.Modifiers
 
 		internal static void UpdateAll(GameObject go, ModifierParam param)
 		{
-			var newValue = (int) param.Value;
-			
 			foreach (var filter in filters)
 			{
 				if (param.Type != filter.ParamType)
 					continue;
 
-				if (newValue == filter.Value && !filter.all.Contains(go))
+				if (IsMatchesFilter(filter, go) && !filter.all.Contains(go))
 					filter.all.Add(go);
-				else if (newValue != filter.Value && filter.all.Contains(go))
+				else if (!IsMatchesFilter(filter, go) && filter.all.Contains(go))
 					filter.all.Remove(go);
 			}
 		}
 
-		public static Filter Make(ModType type, int value)
+		public static Filter Make(ModType type, float value, bool isExclude = false)
 		{
 			foreach (var filter in filters)
-				if (filter.ParamType == type && filter.Value == value)
+				if (filter.ParamType == type && IsMatchesFilter(filter, value))
 					return filter;
 			
-			return new Filter(type, value);
+			return new Filter(type, value) {IsExclude = isExclude};
 		}
 
 		internal static void RemoveAll(GameObject go)
@@ -70,12 +72,19 @@ namespace InsaneOne.Modifiers
 		internal static void InjectInAll(GameObject go)
 		{
 			foreach (var filter in filters)
-			{
-				var paramValue = (int)go.GetModifierValue(filter.ParamType);
-			
-				if (paramValue == filter.Value && !filter.all.Contains(go))
+				if (IsMatchesFilter(filter, go) && !filter.all.Contains(go))
 					filter.all.Add(go);
-			}
+		}
+
+		static bool IsMatchesFilter(Filter filter, GameObject go)
+		{
+			return IsMatchesFilter(filter, go.GetModifierValue(filter.ParamType));
+		}
+		
+		static bool IsMatchesFilter(Filter filter, float value)
+		{
+			var isMatches = Math.Abs(filter.Value - value) < filter.compareTolerance;
+			return isMatches && !filter.IsExclude || !isMatches && filter.IsExclude;
 		}
 	}
 }
