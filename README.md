@@ -8,6 +8,7 @@ You need to add posibility to affect these params - potions buffs, which will in
 
 So, there you can use this extension. 
 
+
 ## How it works
 It is just replaces basic variables to a new thing called Modifier Param (wip naming). It can be max health, damage, move speed - any other thing. These values can be added to params group, which is simple called Modifier. This group describes params of some object - character, buff, item, etc.
 
@@ -28,6 +29,15 @@ Some speed up buff adds extra **2** speed.
 But also there is some debuff which really slows down character, its speed value **-4**.
 
 So, final value (returned by the API) of character speed is **1** (3 + 2 + (-4)).
+
+## Why just not to use OOP and variables
+Modifiers extension allows you to:
+1. Unified serialization.
+2. Ready-made Sum and Subtract operations for the params.
+3. Easily get values from GameObject, there is no need to use GetComponent or something other.
+4. Easy to add new or remove old ones with minimum refactoring amount, which can be easily done with modern IDEs.
+
+It is works nice with MonoBehaviour approach, in other cases you may prefer your own implementation. Also  there are still some limitations etc - for example, if your game have stats for different types of objects (items, characters, etc), it is not very comfy to work with them in one Enum.
 
 ## How to install
 Download repo as source code, unpack to your project. Also you can check Releases for unitypackage.
@@ -129,6 +139,9 @@ Other usage examples can be found in the Example folder.
 You can find it in the Example folder, there is a sample scene.
 It shows simple character with Max Health, Regeneration and Defense parameters.
 Also there is a "damager" which have Damage and Critical Chance parameters. Damage will be applied to the character on left mouse button click. Critical chance will be used to make x2 damage, if random value hits the chance.
+
+## Showcase
+Battleproofed in the **[Echo Storm](https://store.steampowered.com/app/2282200/Echo_Storm)** game.
 
 ## License
 MIT
