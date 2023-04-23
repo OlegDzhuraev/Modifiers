@@ -13,19 +13,22 @@ namespace InsaneOne.Modifiers
 			return modifable;
 		}
 		
+		public static void AddModifier(this GameObject go, UnityModifier modifier) => Get(go).Add(modifier);
 		public static void AddModifier(this GameObject go, Modifier modifier) => Get(go).Add(modifier);
+		
+		public static void RemoveModifier(this GameObject go, UnityModifier modifier) => Get(go).Remove(modifier);
 		public static void RemoveModifier(this GameObject go, Modifier modifier) => Get(go).Remove(modifier);
 		
-		public static float GetModifierValue(this GameObject go, ModType type) => Get(go).GetValue(type);
-		public static int GetIntModifierValue(this GameObject go, ModType type) => (int)go.GetModifierValue(type);
-		public static bool IsModifierValueTrue(this GameObject go, ModType type) => Get(go).GetValue(type) > 0;
-		public static void AddModifierValue(this GameObject go, ModType type, float value) => Get(go).AddValue(type, value);
-		public static void SetModifierValue(this GameObject go, ModType type, float value) => Get(go).SetValue(type, value);
+		public static float GetModifierValue(this GameObject go, string type) => Get(go).GetValue(type);
+		public static int GetIntModifierValue(this GameObject go, string type) => (int)go.GetModifierValue(type);
+		public static bool IsModifierValueTrue(this GameObject go, string type) => Get(go).GetValue(type) > 0;
+		public static void AddModifierValue(this GameObject go, string type, float value) => Get(go).AddValue(type, value);
+		public static void SetModifierValue(this GameObject go, string type, float value) => Get(go).SetValue(type, value);
 		
-		public static void SubToModifier(this GameObject go, ModType type, Action<float> action) => Get(go).SubTo(type, action);
-		public static void UnsubFromModifier(this GameObject go, ModType type, Action<float> action) => Get(go).UnsubFrom(type, action);
+		public static void SubToModifier(this GameObject go, string type, Action<float> action) => Get(go).SubTo(type, action);
+		public static void UnsubFromModifier(this GameObject go, string type, Action<float> action) => Get(go).UnsubFrom(type, action);
 
-		public static void AddTag(this GameObject go, params ModType[] tags)
+		public static void AddTag(this GameObject go, params string[] tags)
 		{
 			var mf = Get(go);
 
@@ -33,7 +36,7 @@ namespace InsaneOne.Modifiers
 				mf.AddValue(tag, 1);
 		}
 
-		public static void AddTagOnce(this GameObject go, params ModType[] tags)
+		public static void AddTagOnce(this GameObject go, params string[] tags)
 		{
 			var mf = Get(go);
 			
@@ -42,7 +45,7 @@ namespace InsaneOne.Modifiers
 					mf.AddValue(tag, 1);
 		}
 
-		public static void RemoveTag(this GameObject go, params ModType[] tags)
+		public static void RemoveTag(this GameObject go, params string[] tags)
 		{
 			var mf = Get(go);
 			
@@ -51,9 +54,9 @@ namespace InsaneOne.Modifiers
 					mf.AddValue(tag, -1);
 		}
 
-		public static bool HasTag(this GameObject go, ModType tag) => Get(go).IsTrue(tag);
+		public static bool HasTag(this GameObject go, string tag) => Get(go).IsTrue(tag);
 		
-		public static bool HasAnyTags(this GameObject go, params ModType[] tags)
+		public static bool HasAnyTags(this GameObject go, params string[] tags)
 		{
 			var mf = Get(go);
 			
@@ -64,7 +67,7 @@ namespace InsaneOne.Modifiers
 			return false;
 		}
 
-		public static bool HasAllTags(this GameObject go, params ModType[] tags)
+		public static bool HasAllTags(this GameObject go, params string[] tags)
 		{
 			var mf = Get(go);
 
@@ -75,7 +78,7 @@ namespace InsaneOne.Modifiers
 			return true;
 		}
 
-		public static bool CompareValues(this GameObject go, ModType type, GameObject other) 
+		public static bool CompareValues(this GameObject go, string type, GameObject other) 
 			=> Mathf.Approximately(go.GetModifierValue(type), other.GetModifierValue(type));
 	}
 }

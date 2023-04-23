@@ -1,13 +1,32 @@
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace InsaneOne.Modifiers.Example
 {
+	// it contains example of working with two approaches:
+	// 1. when you use modifiers without Modifable component. It requires link to a Character class, it can be annoying in the big projects.
+	// 2. when you use modifiers WITH Modifable component. So, now we need only link to the GameObject to change its stats.
+	// It can be very easy to work in this approach, since now you can create static Utilities,
+	// which can handle changes of the object like HealthUtility class.
+	// It is don't know anything except GameObject and Modifable classes.
 	public class Damager : MonoBehaviour
 	{
 		const float CriticalDamageMultiplier = 2f;
 		
-		[SerializeField] Character charToDamage;
-		[SerializeField] Modifier data;
+		[SerializeField] GameObject target;
+		[SerializeField] UnityModifier data;
+
+		Character charToDamageComp;
+
+		bool isModifable;
+		
+		void Start()
+		{
+			isModifable = target.GetComponent<Modifable>();
+			
+			if (!isModifable)
+				charToDamageComp = target.GetComponent<Character>();
+		}
 
 		void Update()
 		{
@@ -33,7 +52,18 @@ namespace InsaneOne.Modifiers.Example
 				GameStateLog.Log($"<color=orange>Damager deals damage {damage}</color>");
 			}
 
-			charToDamage.TakeDamage(damage);
+			if (isModifable)
+				DoTargetDamage(damage);
+			else
+				charToDamageComp.TakeDamage(damage);
+		}
+		
+		public void DoTargetDamage(float value)
+		{
+			var health = target.GetModifierValue(ModType.Health);
+			var defense = target.GetModifierValue(ModType.Defense);
+
+			HealthUtility.SetHealth(target, health - value / defense);
 		}
 	}
 }

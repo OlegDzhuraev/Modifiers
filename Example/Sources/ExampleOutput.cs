@@ -8,17 +8,32 @@ namespace InsaneOne.Modifiers.Example
 	{
 		[SerializeField] Text charHealthText;
 		[SerializeField] Text log;
-		[SerializeField] Character character;
+		[SerializeField] GameObject character;
 
+		bool isModifable;
+		
 		void Awake()
 		{
-			character.HealthChanged += OnHealthChanged;
+			isModifable = character.GetComponent<Modifable>();
+			
+			if (isModifable)
+				character.SubToModifier(ModType.Health, OnHealthChanged);
+			else
+				character.GetComponent<Character>().HealthChanged += OnHealthChanged;
+			
 			GameStateLog.MessageReceived += OnLogMessageReceived;
 		}
 
 		void OnDestroy()
 		{
-			character.HealthChanged -= OnHealthChanged;
+			if (character)
+			{
+				if (isModifable)
+					character.UnsubFromModifier(ModType.Health, OnHealthChanged);
+				else
+					character.GetComponent<Character>().HealthChanged -= OnHealthChanged;
+			}
+
 			GameStateLog.MessageReceived -= OnLogMessageReceived;
 		}
 

@@ -6,21 +6,21 @@ namespace InsaneOne.Modifiers
 {
 	public class Modifable : MonoBehaviour
 	{
-		internal static readonly Dictionary<GameObject, Modifable> all = new Dictionary<GameObject, Modifable>();
-		static readonly List<GameObject> searchLsit = new List<GameObject>();
+		internal static readonly Dictionary<GameObject, Modifable> all = new ();
+		static readonly List<GameObject> searchCollection = new ();
 		
 		public event Action WasChanged;
 		
-		[SerializeField] Modifier defaultModifier;
+		[SerializeField] UnityModifier[] defaultModifiers = Array.Empty<UnityModifier>();
 		[Tooltip("Should load values for modifer from default settings if no value found? Otherwise returns Param with value == 0.")]
 		[SerializeField] bool useDefaultIfNoValue = true;
 
-		public Modifier DefaultModifier => defaultModifier;
+		public UnityModifier[] DefaultModifiers => defaultModifiers;
 		
-		readonly List<Modifier> modifiers = new List<Modifier>();
-		readonly Dictionary<int, float> values = new ();
+		readonly List<Modifier> modifiers = new ();
+		readonly Dictionary<string, float> values = new ();
 
-		readonly Dictionary<int, List<Action<float>>> subscriptions = new ();
+		readonly Dictionary<string, List<Action<float>>> subscriptions = new ();
 
 		bool isInitialized;
 
@@ -28,11 +28,13 @@ namespace InsaneOne.Modifiers
 		{
 			all.Add(gameObject, this);
 
-			if (defaultModifier)
+			foreach (var mod in defaultModifiers)
 			{
-				var instanced = Instantiate(defaultModifier);
-				instanced.Init();
-				Add(instanced);
+				var raw = mod.GetRaw();
+				raw.Clone();
+				raw.Init();
+				
+				Add(raw);
 			}
 
 			Filter.InjectInAll(gameObject);
@@ -50,16 +52,19 @@ namespace InsaneOne.Modifiers
 				Filter.RemoveAll(gameObject);
 		}
 
-		void OnValueChange(ModType type, float value)
+		void OnValueChange(string type, float value)
 		{
-			if (subscriptions.TryGetValue((int)type, out var list))
+			if (subscriptions.TryGetValue(type, out var list))
 				for (var i = list.Count - 1; i >= 0; i--)
 					list[i]?.Invoke(value);
 		}
 		
+		public void Add(UnityModifier modifier) => Add(modifier.GetRaw());
+		public void Remove(UnityModifier modifier) => Remove(modifier.GetRaw());
+
 		public void Add(Modifier modifier)
 		{
-			var modifierParams = modifier.GetAllValuesInternal();
+			var modifierParams = modifier.GetAllValues();
 			
 			foreach (var param in modifierParams)
 				AddValue(param.Type, param.Value);
@@ -73,82 +78,82 @@ namespace InsaneOne.Modifiers
 			if (!modifiers.Contains(modifier))
 				return;
 			
-			var modifierParams = modifier.GetAllValuesInternal();
+			var modifierParams = modifier.GetAllValues();
 
 			foreach (var param in modifierParams)
-				SetValue(param.Type, values[(int)param.Type] - param.Value);
+				SetValue(param.Type, values[param.Type] - param.Value);
 
 			modifiers.Remove(modifier);
 			WasChanged?.Invoke();
 		}
 		
 		/// <summary> Sets value to the specified field. Overrides all applied modifiers (can cause wrong results if you will remove some added modifiers after setting custom value, so, be careful). </summary>
-		public void SetValue(ModType type, float value)
+		public void SetValue(string type, float value)
 		{
-			values[(int)type] = value;
+			values[type] = value;
 			
 			OnValueChange(type, value);
 		}
 
-		public void AddValue(ModType type, float value)
+		public void AddValue(string type, float value)
 		{
-			if (values.ContainsKey((int)type))
-				SetValue(type, values[(int)type] + value);
+			if (values.ContainsKey(type))
+				SetValue(type, values[type] + value);
 			else
 				SetValue(type, value);
 		}
 		
-		public float GetValue(ModType type)
+		public float GetValue(string type)
 		{
 			if (!isInitialized)
-				return defaultModifier ? defaultModifier.GetValue(type) : GetDefault(type, useDefaultIfNoValue);
+				return defaultModifiers.Length > 0 ? defaultModifiers[0].GetValue(type) : GetDefault(type, useDefaultIfNoValue);
 			
-			return values.TryGetValue((int)type, out var result) ? result : GetDefault(type, useDefaultIfNoValue);
+			return values.TryGetValue(type, out var result) ? result : GetDefault(type, useDefaultIfNoValue);
 		}
 
-		public bool IsTrue(ModType type) => GetValue(type) > 0;
+		public bool IsTrue(string type) => GetValue(type) > 0;
 
-		public void SubTo(ModType type, Action<float> action)
+		public void SubTo(string type, Action<float> action)
 		{
-			if (!subscriptions.TryGetValue((int)type, out var list))
+			if (!subscriptions.TryGetValue(type, out var list))
 			{
 				list = new List<Action<float>>();
-				subscriptions[(int)type] = list;
+				subscriptions[type] = list;
 			}
 			
 			list.Add(action);
 		}
 		
-		public void UnsubFrom(ModType type, Action<float> action)
+		public void UnsubFrom(string type, Action<float> action)
 		{
-			if (subscriptions.TryGetValue((int)type, out var list))
+			if (subscriptions.TryGetValue(type, out var list))
 				list.Remove(action);
 		}
 
-		public Dictionary<int, float> GetAllValuesInternal() => values;
+		public Dictionary<string, float> GetAllValuesInternal() => values;
 		
-		static float GetDefault(ModType type, bool useDefault)
+		static float GetDefault(string type, bool useDefault)
 		{
 			if (!useDefault)
 				return 0;
 			
-			var defaultValues = DefaultModifierSettings.Get();
+			var defaultValues = DefaultUnityModifierSettings.Get();
 
 			if (defaultValues)
-				return defaultValues.GetParamValue(type);
+				return defaultValues.GetValue(type);
 
 			return 0;
 		}
 
-		internal static List<GameObject> FindAllWith(ModType type, float value, float tolerance = 0.01f)
+		internal static List<GameObject> FindAllWith(string type, float value, float tolerance = 0.01f)
 		{
-			searchLsit.Clear();
+			searchCollection.Clear();
 
 			foreach (var state in all)
 				if (Math.Abs(state.Value.GetValue(type) - value) < tolerance) // && state.gameObject.activeInHierarchy
-					searchLsit.Add(state.Key);
+					searchCollection.Add(state.Key);
 			
-			return searchLsit;
+			return searchCollection;
 		}
 
 		public static void Init() => all.Clear();

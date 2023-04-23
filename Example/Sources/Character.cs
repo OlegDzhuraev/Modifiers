@@ -3,11 +3,14 @@ using UnityEngine;
 
 namespace InsaneOne.Modifiers.Example
 {
+	// Alternative variation without usage of the ready-made Modifable component.
+	// This is more like classic Monobehaviour approach, here Modifiers used just as storage of basic character stats.
+	// For more "interesting" example check class CharacterModifable.
 	public class Character : MonoBehaviour
 	{
 		public event Action<float> HealthChanged;
 
-		[SerializeField] Modifier data;
+		[SerializeField] UnityModifier data;
 
 		public float Health { get; private set; }
 

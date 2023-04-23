@@ -9,13 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8247443532e64f4981d07feeb5fc8726, type: 3}
+  m_Script: {fileID: 11500000, guid: 6d7904d7e84a4294f8411de18c885b5e, type: 3}
   m_Name: CharacterModifier
   m_EditorClassIdentifier: 
-  parameters:
-  - Type: 0
-    Value: 100
-  - Type: 10
-    Value: 1
-  - Type: 20
-    Value: 1.5
+  modifier:
+    Name: CharacterModifier
+    parameters:
+    - Type: Health
+      Value: 100
+    - Type: MaxHealth
+      Value: 100
+    - Type: Defense
+      Value: 2
+    - Type: Regeneration
+      Value: 2

@@ -12,7 +12,7 @@ namespace InsaneOne.Modifiers
 				return instance;
 
 			var go = new GameObject("GlobalModifable_Scene");
-			var modifable = go.AddComponent<Modifable>();
+			go.AddComponent<Modifable>();
 
 			instance = go;
 

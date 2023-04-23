@@ -9,7 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7ec916645f246b48c6ad29092a1df78, type: 3}
+  m_Script: {fileID: 11500000, guid: 2cc5d48373543e146b30727841844144, type: 3}
   m_Name: DefaultModifierSettings
   m_EditorClassIdentifier: Assembly-CSharp:InsaneOne.Modifiers:DefaultModifierSettings
-  parameters: []
+  modifier:
+    Name: DefaultModifierSettings
+    parameters: []
+  supportedModifiers:
+  - MaxHealth
+  - Health
+  - Regeneration
+  - Damage
+  - Defense
+  - CriticalChance

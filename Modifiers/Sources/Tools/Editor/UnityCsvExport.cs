@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -6,15 +7,15 @@ namespace InsaneOne.Modifiers.Tools
 {
 	public class UnityCsvExport : EditorWindow
 	{
-		[SerializeField] Modifier[] modifiers;
+		[SerializeField] UnityModifier[] modifiers;
 		
 		SerializedObject so;
 
-		[MenuItem("Tools/InsaneOne/Modifiers CSV Export")]
-		static void Init()
+		[MenuItem("Tools/InsaneOne Modifiers/Export CSV...")]
+		public static void Init()
 		{
 			var window = (UnityCsvExport)GetWindow(typeof(UnityCsvExport));
-			window.titleContent = new GUIContent("Modifiers CSV Export");
+			window.titleContent = new GUIContent("Modifiers Csv Export");
 			window.Show();
 		}
 
@@ -33,12 +34,30 @@ namespace InsaneOne.Modifiers.Tools
 			so.ApplyModifiedProperties();
 			
 			var prevEnabled = GUI.enabled;
-			GUI.enabled = modifiers.Length > 0;
-			
-			if (GUILayout.Button("Export CSV to console"))
-				Debug.Log(CsvExport.Export(modifiers));
+			GUI.enabled = modifiers is {Length: > 0};
 
+			if (GUILayout.Button("Export CSV to console"))
+				Debug.Log(MakeExportString(modifiers));
+			
+			if (GUILayout.Button("DEBBBB GEN "))
+				ConstsGenerator.Generate();
+			
+			if (GUILayout.Button("Export CSV to file in Assets"))
+			{
+				var path = Path.Combine(Application.dataPath, "ModifiersExport_rid_" + Random.Range(0, 9999) + ".csv");
+				File.WriteAllText(path, MakeExportString(modifiers));
+			}
+			
 			GUI.enabled = prevEnabled;
+		}
+
+		string MakeExportString(UnityModifier[] mods)
+		{
+			var rawModifiers = new Modifier[modifiers.Length];
+			for (var i = 0; i < rawModifiers.Length; i++)
+				rawModifiers[i] = modifiers[i].GetRaw();
+				
+			return CsvExport.Export(rawModifiers);
 		}
 	}
 }

@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+
 using UnityEditor;
 using UnityEngine;
 
@@ -15,17 +16,23 @@ namespace InsaneOne.Modifiers.Dev
 
 			var modifable = target as Modifable;
 
-			if (!Application.isPlaying && modifable.DefaultModifier)
+			if (!Application.isPlaying && modifable && modifable.DefaultModifiers != null)
 			{
-				CreateCachedEditor(modifable.DefaultModifier, null, ref modifierEditor);
-				modifierEditor.OnInspectorGUI();
+				foreach (var mod in modifable.DefaultModifiers)
+				{
+					if (mod == null)
+						continue;
+					
+					CreateCachedEditor(mod, null, ref modifierEditor);
+					modifierEditor.OnInspectorGUI();
+				}
 			}
 
 			var values = modifable.GetAllValuesInternal();
 			
 			foreach (var kvp in values)
 			{
-				GUILayout.Label($"{(ModType)kvp.Key} = {kvp.Value}", EditorStyles.boldLabel);
+				GUILayout.Label($"{kvp.Key} = {kvp.Value}", EditorStyles.boldLabel);
 				GUILayout.Space(5);
 			}
 		}
