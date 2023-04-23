@@ -36,26 +36,27 @@ Modifiers extension allows you to:
 2. Ready-made Sum and Subtract operations for the params.
 3. Easily get values from GameObject, there is no need to use GetComponent or something other.
 4. Easy to add new or remove old ones with minimum refactoring amount, which can be easily done with modern IDEs.
+5. Easily move some of your gameplay systems between projects, since Modifiers allow your code to not depend on other game classes (check the example for more info).
 
 It is works nice with MonoBehaviour approach, in other cases you may prefer your own implementation. Also  there are still some limitations etc - for example, if your game have stats for different types of objects (items, characters, etc), it is not very comfy to work with them in one Enum.
 
 ## How to install
-Download repo as source code, unpack to your project. Also you can check Releases for unitypackage.
+Download repo as source code, unpack to your project. Also you can check **Releases** for unitypackage.
 
-Package manager install will not be supported on this repo.
+I do not sure, that Package manager install will be supported on this repo in near future.
 
 ## Quick start
 ### Setup steps
-1. Make **Default Unity Modifiers Settings** from the Right click menu in the **Project Window** (or take it from the **Example** folder).
+1. Make a new **Default Unity Modifiers Settings** from the Right click context menu in the **Project Window** (or take it from the **Example** folder).
 2. Add some values into its **Supported Modifiers** list.
-3. To use it from code more easier, you need to generate constants (all examples use generated constants, so, better to do it). It can be found in Top Menu -> Tools -> Insane One Modifiers -> Common... -> **Generate constsants button**. It will generate **ModType** static class with a list of constants, similar to your strings list in the Settings asset. *It is not neseccary to generate it.*
+3. To use it from code more easier, you need to generate constants (all examples use generated constants, so, better to do it). It can be found in the Top Menu -> Tools -> Insane One Modifiers -> Common... -> **Generate constsants button**. It will generate the **ModType** static class with a list of constants, similar to your strings list in the Settings asset. *It is not neseccary to generate it.*
 
-Also, remove Example folder, if you not plan to work with it.
+Also, remove the Example folder, if you not plan to work with it.
 
 ### Adding a new modifier types.
-Insert them to **Supported Modifiers** list of the **Default Unity Modifiers Settings**, example values can be removed of course.
+Insert them to the **Supported Modifiers** list of the **Default Unity Modifiers Settings** asset. Example values can be removed.
 
-Dont forget about constants generation, if you're use them.
+Dont forget about constants generation, if you're planning to use them.
 
 ### How to create a new modifier?
 Right click in the Project window -> Modifiers -> **New modifier**.
