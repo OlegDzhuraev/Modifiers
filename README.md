@@ -58,6 +58,12 @@ Insert them to the **Supported Modifiers** list of the **Default Unity Modifiers
 
 Dont forget about constants generation, if you're planning to use them.
 
+#### How to rename already exist modifiers types
+It can look a kinda tricky comparing string type names to, for example, Enum usage, but it is easy with modern IDE. You need to:
+1. Replace string type name in all of assets (Prefabs and SO), using your IDE. Replace all of the **"OldName"** to the **"NewName"**. Note that quotes means strings, so include it in your replace request.
+2. (only if you're using generated constants) rename the **OldName** constant to the **NewName** using your IDE. It will replace all code usages.
+3. (fully optional, also only if you're using generated constants) Generate new constants to approve that you renamed all correct.
+
 ### How to create a new modifier?
 Right click in the Project window -> Modifiers -> **New modifier**.
 
