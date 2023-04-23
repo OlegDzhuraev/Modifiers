@@ -45,17 +45,25 @@ Download repo as source code, unpack to your project. Also you can check Release
 Package manager install will not be supported on this repo.
 
 ## Quick start
+### Setup steps
+1. Make Default Unity Modifiers Settings from RMB menu in the Project Window (or take it from Example folder).
+2. Add some values into its Supported Modifiers list.
+Also, remove Example folder, if you not plan to work with it.
 
 ### Adding a new modifier types.
-Insert it to enum **ModifierType**, add new ones (remove default values, it is just for example).
+Insert them to **Supported Modifiers** list of the **Default Unity Modifiers Settings**, example values can be removed of course.
 
-### How to create modifier?
-Right click in the Project window -> Modifiers -> New modifier.
+To use it from code more easier, you need to generate constants (all examples use generated constants, so, better to do it). It can be found in Top Menu -> Tools -> Insane One Modifiers -> Common... -> **Generate constsants button**. It will generate ModType static class with a list of constants, similar to your strings list in the Settings asset. *It is not neseccary to generate it.*
 
-Next, you're need to add required params to the list in this modifier.
+### How to create a new modifier?
+Right click in the Project window -> Modifiers -> **New modifier**.
+
+Next, you're need to add required params to the list in this modifier. It can be Health, Damage, etc.
 
 ### How to create buff?
-Right click in the Project window -> Modifiers -> New buff.
+Buffs are modifiers with a lifetime and stacks amount parameter. It is just simplifies creation of this functionality.
+
+Right click in the Project window -> Modifiers -> **New buff**.
 
 Setup buff parameters, add buff modifiers.
 
