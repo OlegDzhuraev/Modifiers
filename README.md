@@ -46,14 +46,16 @@ Package manager install will not be supported on this repo.
 
 ## Quick start
 ### Setup steps
-1. Make Default Unity Modifiers Settings from RMB menu in the Project Window (or take it from Example folder).
-2. Add some values into its Supported Modifiers list.
+1. Make **Default Unity Modifiers Settings** from the Right click menu in the **Project Window** (or take it from the **Example** folder).
+2. Add some values into its **Supported Modifiers** list.
+3. To use it from code more easier, you need to generate constants (all examples use generated constants, so, better to do it). It can be found in Top Menu -> Tools -> Insane One Modifiers -> Common... -> **Generate constsants button**. It will generate **ModType** static class with a list of constants, similar to your strings list in the Settings asset. *It is not neseccary to generate it.*
+
 Also, remove Example folder, if you not plan to work with it.
 
 ### Adding a new modifier types.
 Insert them to **Supported Modifiers** list of the **Default Unity Modifiers Settings**, example values can be removed of course.
 
-To use it from code more easier, you need to generate constants (all examples use generated constants, so, better to do it). It can be found in Top Menu -> Tools -> Insane One Modifiers -> Common... -> **Generate constsants button**. It will generate ModType static class with a list of constants, similar to your strings list in the Settings asset. *It is not neseccary to generate it.*
+Dont forget about constants generation, if you're use them.
 
 ### How to create a new modifier?
 Right click in the Project window -> Modifiers -> **New modifier**.
