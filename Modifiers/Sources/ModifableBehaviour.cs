@@ -5,7 +5,7 @@ namespace InsaneOne.Modifiers
 {
 	/// <summary> Can be used instead of MonoBehaviour to reduce code size. </summary>
 	[RequireComponent(typeof(Modifable))]
-	public class ModifableBehaviour : MonoBehaviour
+	public abstract class ModifableBehaviour : MonoBehaviour
 	{
 		public void SetValue(string type, float value) => gameObject.SetModifierValue(type, value);
 		public void AddValue(string type, float value) => gameObject.AddModifierValue(type, value);

@@ -10,7 +10,7 @@ namespace InsaneOne.Modifiers
 
 		public Modifier GetRaw() => modifier;
 		
-		/// <summary> Use it when before working with modifier. Use only on instances! Keep in mind, that instancing is not recommended, since instance is unique modifier and can be removed by reference of its template after.</summary>
+		/// <summary> Use it before working with modifier instance. Use only on instances! Keep in mind, that instancing is not recommended, since instance is unique modifier and can be removed by reference of its template after.</summary>
 		protected void Init()
 		{
 			modifier = modifier.Clone();
