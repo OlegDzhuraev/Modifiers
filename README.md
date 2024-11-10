@@ -36,26 +36,43 @@ Modifiers extension allows you to:
 2. Ready-made Sum and Subtract operations for the params.
 3. Easily get values from GameObject, there is no need to use GetComponent or something other.
 4. Easy to add new or remove old ones with minimum refactoring amount, which can be easily done with modern IDEs.
+5. Easily move some of your gameplay systems between projects, since Modifiers allow your code to not depend on other game classes (check the example for more info).
 
 It is works nice with MonoBehaviour approach, in other cases you may prefer your own implementation. Also  there are still some limitations etc - for example, if your game have stats for different types of objects (items, characters, etc), it is not very comfy to work with them in one Enum.
 
 ## How to install
-Download repo as source code, unpack to your project. Also you can check Releases for unitypackage.
+Download repo as source code, unpack to your project. Also you can check **Releases** for unitypackage.
 
-Package manager install will not be supported on this repo.
+I do not sure, that Package manager install will be supported on this repo in near future.
 
 ## Quick start
+### Setup steps
+1. Make a new **Default Unity Modifiers Settings** from the Right click context menu in the **Project Window** (or take it from the **Example** folder).
+2. Add some values into its **Supported Modifiers** list.
+3. To use it from code more easier, you need to generate constants (all examples use generated constants, so, better to do it). It can be found in the Top Menu -> Tools -> Insane One Modifiers -> Common... -> **Generate constsants button**. It will generate the **ModType** static class with a list of constants, similar to your strings list in the Settings asset. *It is not neseccary to generate it.*
+
+Also, remove the Example folder, if you not plan to work with it.
 
 ### Adding a new modifier types.
-Insert it to enum **ModifierType**, add new ones (remove default values, it is just for example).
+Insert them to the **Supported Modifiers** list of the **Default Unity Modifiers Settings** asset. Example values can be removed.
 
-### How to create modifier?
-Right click in the Project window -> Modifiers -> New modifier.
+Dont forget about constants generation, if you're planning to use them.
 
-Next, you're need to add required params to the list in this modifier.
+#### How to rename already exist modifiers types
+It can look a kinda tricky comparing string type names to, for example, Enum usage, but it is easy with modern IDE. You need to:
+1. Replace string type name in all of assets (Prefabs and SO), using your IDE. Replace all of the **"OldName"** to the **"NewName"**. Note that quotes means strings, so include it in your replace request.
+2. (only if you're using generated constants) rename the **OldName** constant to the **NewName** using your IDE. It will replace all code usages.
+3. (fully optional, also only if you're using generated constants) Generate new constants to approve that you renamed all correct.
+
+### How to create a new modifier?
+Right click in the Project window -> Modifiers -> **New modifier**.
+
+Next, you're need to add required params to the list in this modifier. It can be Health, Damage, etc.
 
 ### How to create buff?
-Right click in the Project window -> Modifiers -> New buff.
+Buffs are modifiers with a lifetime and stacks amount parameter. It is just simplifies creation of this functionality.
+
+Right click in the Project window -> Modifiers -> **New buff**.
 
 Setup buff parameters, add buff modifiers.
 

@@ -8,7 +8,7 @@ namespace InsaneOne.Modifiers
 	{
 		internal static readonly List<Filter> filters = new ();
 		
-		public ModType ParamType { get; }
+		public string ParamType { get; }
 		public float Value { get; }
 		public bool IsExclude { get; private set; }
 
@@ -17,7 +17,7 @@ namespace InsaneOne.Modifiers
 		readonly List<GameObject> all = new ();
 		readonly List<GameObject> activeResults = new ();
 		
-		Filter(ModType param, float value)
+		Filter(string param, float value)
 		{
 			ParamType = param;
 			Value = value;
@@ -54,7 +54,7 @@ namespace InsaneOne.Modifiers
 			}
 		}
 
-		public static Filter Make(ModType type, float value, bool isExclude = false)
+		public static Filter Make(string type, float value, bool isExclude = false)
 		{
 			foreach (var filter in filters)
 				if (filter.ParamType == type && IsMatchesFilter(filter, value))

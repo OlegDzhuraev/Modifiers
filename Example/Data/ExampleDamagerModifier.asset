@@ -9,11 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8247443532e64f4981d07feeb5fc8726, type: 3}
+  m_Script: {fileID: 11500000, guid: 6d7904d7e84a4294f8411de18c885b5e, type: 3}
   m_Name: ExampleDamagerModifier
   m_EditorClassIdentifier: 
-  parameters:
-  - Type: 30
-    Value: 10
-  - Type: 40
-    Value: 0.25
+  modifier:
+    Name: ExampleDamagerModifier
+    parameters:
+    - Type: Damage
+      Value: 10
+    - Type: CriticalChance
+      Value: 0.2

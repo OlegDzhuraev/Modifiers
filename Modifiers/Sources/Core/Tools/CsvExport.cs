@@ -1,15 +1,13 @@
 using System;
-using UnityEngine;
+using System.Globalization;
 
 namespace InsaneOne.Modifiers.Tools
 {
 	public static class CsvExport
 	{
-		const int MaxAmount = 99;
-		
 		public static string Export(Modifier[] modifiers)
 		{
-			var table = new string[MaxAmount, modifiers.Length + 1];
+			var table = new string[100, modifiers.Length + 1];
 			var actualParam = 1;
 
 			table[0, 0] = "M_Title";
@@ -17,28 +15,27 @@ namespace InsaneOne.Modifiers.Tools
 			for (var y = 1; y <= modifiers.Length; y++)
 			{
 				var modifier = modifiers[y - 1];
-				var innerValues = modifier.GetAllValuesInternal();
 				
-				foreach (var param in innerValues)
+				foreach (var param in modifier.GetAllValues())
 				{
 					var isFound = false;
 
-					for (var x = 0; x < MaxAmount - 1; x++)
+					for (var x = 0; x < 99; x++)
 					{
-						if (table[x, 0] == param.Type.ToString())
+						if (table[x, 0] == param.Type)
 						{
-							table[x, y] = param.Value.ToString();
+							table[x, y] = param.Value.ToString(CultureInfo.InvariantCulture);
 							isFound = true;
 							break;
 						}
 					}
 
-					table[0, y] = modifier.name;
+					table[0, y] = modifier.Name;
 					
 					if (!isFound)
 					{
-						table[actualParam, 0] = param.Type.ToString();
-						table[actualParam, y] = param.Value.ToString();
+						table[actualParam, 0] = param.Type;
+						table[actualParam, y] = param.Value.ToString(CultureInfo.InvariantCulture);
 						actualParam++;
 					}
 				}

@@ -1,4 +1,4 @@
-namespace InsaneOne.Modifiers
+namespace InsaneOne.Modifiers.Buffs
 {
 	public class BuffTimer
 	{

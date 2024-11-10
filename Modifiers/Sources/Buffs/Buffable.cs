@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace InsaneOne.Modifiers
+namespace InsaneOne.Modifiers.Buffs
 {
 	public class Buffable : MonoBehaviour
 	{
