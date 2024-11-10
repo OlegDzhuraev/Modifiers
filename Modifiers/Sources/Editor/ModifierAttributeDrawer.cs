@@ -80,7 +80,7 @@ namespace InsaneOne.Modifiers.Dev
 			if (!defaultMod)
 				return false;
 			
-			var mods = defaultMod.SupportedMofifiers;
+			var mods = defaultMod.SupportedModifiers;
 			for (var i = 0; i < mods.Length; i++)
 				if (mods[i] == textId)
 					return true;
@@ -95,7 +95,7 @@ namespace InsaneOne.Modifiers.Dev
 			if (startsWith == "" || !defaultMod)
 				return "";
 			
-			var mods = DefaultUnityModifierSettings.Get().SupportedMofifiers;
+			var mods = DefaultUnityModifierSettings.Get().SupportedModifiers;
 			
 			for (var i = 0; i < mods.Length; i++)
 				if (mods[i] == startsWith)
@@ -116,7 +116,7 @@ namespace InsaneOne.Modifiers.Dev
 			if (startsWith == "" || !defaultMod)
 				return results; 
 			
-			var mods = defaultMod.SupportedMofifiers;
+			var mods = defaultMod.SupportedModifiers;
 			
 			for (var i = 0; i < mods.Length; i++)
 				if (mods[i].Contains(startsWith))

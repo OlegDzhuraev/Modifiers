@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace InsaneOne.Modifiers
@@ -27,12 +28,17 @@ namespace InsaneOne.Modifiers
 
 		public static void Generate()
 		{
+			var defaultMod = DefaultUnityModifierSettings.Get();
+
+			if (!defaultMod)
+				throw new NullReferenceException("No Default Unity Modifier Settings found! Create it first.");
+
 			var result = tpl;
 			result = result.Replace("#NAMESPACE", namespaceName);
 			result = result.Replace("#CLASSNAME", className);
 
 			var content = "";
-			var mods = DefaultUnityModifierSettings.Get().SupportedMofifiers;
+			var mods = defaultMod.SupportedModifiers;
 			
 			foreach (var mod in mods)
 				content += $"		public const string {mod} = \"{mod}\";\n";

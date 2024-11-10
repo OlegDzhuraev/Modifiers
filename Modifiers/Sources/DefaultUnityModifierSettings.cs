@@ -10,7 +10,7 @@ namespace InsaneOne.Modifiers
 
 		[SerializeField] string[] supportedModifiers = Array.Empty<string>();
 
-		public string[] SupportedMofifiers => supportedModifiers;
+		public string[] SupportedModifiers => supportedModifiers;
 
 		/// <summary> Call it on game initialize to manually set up your own default settings, otherwise it will try to load it from resources. </summary>
 		public static void Setup(DefaultUnityModifierSettings defaultSettings) => instance = defaultSettings;
