@@ -39,9 +39,6 @@ namespace InsaneOne.Modifiers.Tools
 			if (GUILayout.Button("Export CSV to console"))
 				Debug.Log(MakeExportString(modifiers));
 			
-			if (GUILayout.Button("DEBBBB GEN "))
-				ConstsGenerator.Generate();
-			
 			if (GUILayout.Button("Export CSV to file in Assets"))
 			{
 				var path = Path.Combine(Application.dataPath, "ModifiersExport_rid_" + Random.Range(0, 9999) + ".csv");
