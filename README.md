@@ -4,7 +4,7 @@ Easily make flexible parameters for your characters, items, abilities, buffs in 
 ## Use cases
 Your game character has some parameters, for example - move speed, max health, etc.
 
-You need to add posibility to affect these params - potions buffs, which will increase values of character parameters; enemies attacks debuffs, which will decrease these values, etc. And all of these should be combined easily.
+You need to add possibility to affect these params - potions buffs, which will increase values of character parameters; enemies attacks debuffs, which will decrease these values, etc. And all of these should be combined easily.
 
 So, there you can use this extension. 
 
@@ -38,25 +38,26 @@ Modifiers extension allows you to:
 4. Easy to add new or remove old ones with minimum refactoring amount, which can be easily done with modern IDEs.
 5. Easily move some of your gameplay systems between projects, since Modifiers allow your code to not depend on other game classes (check the example for more info).
 
-It is works nice with MonoBehaviour approach, in other cases you may prefer your own implementation. Also  there are still some limitations etc - for example, if your game have stats for different types of objects (items, characters, etc), it is not very comfy to work with them in one Enum.
+It is works nice with MonoBehaviour approach, in other cases you may prefer your own implementation. Also, there are still some limitations etc - for example, if your game have stats for different types of objects (items, characters, etc), it is not very comfy to work with them in one Enum.
 
 ## How to install
-Download repo as source code, unpack to your project. Also you can check **Releases** for unitypackage.
+You can install it by using Package Manager:
+https://github.com/OlegDzhuraev/Modifiers.git
 
-I do not sure, that Package manager install will be supported on this repo in near future.
+Alternative install: download repo as source code, unpack to your project. Also, you can check **Releases** for unitypackage.
 
 ## Quick start
 ### Setup steps
 1. Make a new **Default Unity Modifiers Settings** from the Right click context menu in the **Project Window** (or take it from the **Example** folder).
 2. Add some values into its **Supported Modifiers** list.
-3. To use it from code more easier, you need to generate constants (all examples use generated constants, so, better to do it). It can be found in the Top Menu -> Tools -> Insane One Modifiers -> Common... -> **Generate constsants button**. It will generate the **ModType** static class with a list of constants, similar to your strings list in the Settings asset. *It is not neseccary to generate it.*
+3. To use it from code with more comfort, you need to generate constants (all examples use generated constants, so, better to do it). It can be found in the Top Menu -> Tools -> Insane One Modifiers -> Common... -> **Generate constsants button**. It will generate the **ModType** static class with a list of constants, similar to your strings list in the Settings asset. *It is not neseccary to generate it.*
 
 Also, remove the Example folder, if you not plan to work with it.
 
 ### Adding a new modifier types.
 Insert them to the **Supported Modifiers** list of the **Default Unity Modifiers Settings** asset. Example values can be removed.
 
-Dont forget about constants generation, if you're planning to use them.
+Don't forget about constants generation, if you're planning to use them.
 
 #### How to rename already exist modifiers types
 It can look a kinda tricky comparing string type names to, for example, Enum usage, but it is easy with modern IDE. You need to:
@@ -155,7 +156,7 @@ Other usage examples can be found in the Example folder.
 ## Example
 You can find it in the Example folder, there is a sample scene.
 It shows simple character with Max Health, Regeneration and Defense parameters.
-Also there is a "damager" which have Damage and Critical Chance parameters. Damage will be applied to the character on left mouse button click. Critical chance will be used to make x2 damage, if random value hits the chance.
+Also, there is a "damager" which have Damage and Critical Chance parameters. Damage will be applied to the character on left mouse button click. Critical chance will be used to make x2 damage, if random value hits the chance.
 
 ## Showcase
 Battleproofed in the **[Echo Storm](https://store.steampowered.com/app/2282200/Echo_Storm)** game.
