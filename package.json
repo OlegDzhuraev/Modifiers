@@ -1,0 +1,18 @@
+{
+    "name": "com.insaneone.modifiers",
+    "author": "InsaneOne",
+    "displayName": "Modifiers",
+    "description": "Game development Modifiers extension for Unity (C#). MIT License.",
+    "unity": "2022.1",
+    "version": "0.0.3",
+    "keywords": [
+        "unity",
+        "modifiers",
+        "insaneone"
+    ],
+    "dependencies": {},
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/OlegDzhuraev/Modifiers.git"
+    }
+}
