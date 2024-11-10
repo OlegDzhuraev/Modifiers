@@ -156,6 +156,7 @@ namespace InsaneOne.Modifiers
 			return searchCollection;
 		}
 
+        /// <summary> Call this method on game initialization to initialize Modifables system. </summary>
 		public static void Init() => all.Clear();
 	}
 }
