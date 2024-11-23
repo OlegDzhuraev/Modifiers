@@ -9,8 +9,11 @@ namespace InsaneOne.Modifiers.Dev
 	[CustomPropertyDrawer(typeof(ModifierAttribute))]
 	public class ModifierAttributeDrawer : PropertyDrawer
 	{
-		static float helpHeight = 18f;
-		static float separator = 6f;
+		static readonly float helpHeight = 18f;
+		static readonly float separator = 6f;
+		static readonly float groupIndicatorWidth = 3f;
+
+		static readonly List<string> textsCache = new List<string>();
 
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
@@ -23,7 +26,16 @@ namespace InsaneOne.Modifiers.Dev
 				GUI.color = Color.yellow;
 
 			var propertyRect = new Rect(position.x, position.y, position.width, 20f);
+
+			var groupColor = GetColor(property.stringValue);
+
 			property.stringValue = EditorGUI.TextField(propertyRect, property.stringValue);
+
+			if (groupColor != Color.white)
+			{
+				var groupRect = new Rect(propertyRect.x - groupIndicatorWidth, propertyRect.y, groupIndicatorWidth, propertyRect.height);
+				EditorGUI.DrawRect(groupRect, groupColor);
+			}
 
 			GUI.color = prevColor;
 
@@ -46,7 +58,12 @@ namespace InsaneOne.Modifiers.Dev
 
 					var color = i % 2 == 0 ? new Color(0.1f, 0.1f, 0.1f, 1f) : new Color(0.125f, 0.125f, 0.125f, 1f);
 					EditorGUI.DrawRect(helpRectBig, color);
-					EditorGUI.LabelField(helpRectBig, s);
+
+					if (GUI.Button(helpRectBig, s, EditorStyles.label))
+					{
+						property.stringValue = s;
+						GUI.FocusControl(null);
+					}
 				}
 			}
 		}
@@ -71,13 +88,10 @@ namespace InsaneOne.Modifiers.Dev
 			
 			return separator + helpAmount * helpHeight;
 		}
-		
 
 		public static bool IsCorrectId(string textId)
 		{
-			var defaultMod = DefaultUnityModifierSettings.Get();
-
-			if (!defaultMod)
+			if (!DefaultUnityModifierSettings.TryGetEditor(out var defaultMod))
 				return false;
 			
 			var mods = defaultMod.SupportedModifiers;
@@ -90,9 +104,7 @@ namespace InsaneOne.Modifiers.Dev
 
 		public static string GetSimilarText(string startsWith)
 		{
-			var defaultMod = DefaultUnityModifierSettings.Get();
-			
-			if (startsWith == "" || !defaultMod)
+			if (startsWith == "" || !DefaultUnityModifierSettings.TryGetEditor(out var defaultMod))
 				return "";
 			
 			var mods = DefaultUnityModifierSettings.Get().SupportedModifiers;
@@ -110,19 +122,26 @@ namespace InsaneOne.Modifiers.Dev
 		
 		public static List<string> GetAllSimilarText(string startsWith)
 		{
-			var defaultMod = DefaultUnityModifierSettings.Get();
-			var results = new List<string>();
-			
-			if (startsWith == "" || !defaultMod)
-				return results; 
+			textsCache.Clear();
+
+			if (startsWith == "" || !DefaultUnityModifierSettings.TryGetEditor(out var defaultMod))
+				return textsCache;
 			
 			var mods = defaultMod.SupportedModifiers;
 			
 			for (var i = 0; i < mods.Length; i++)
 				if (mods[i].Contains(startsWith))
-					results.Add(mods[i]);
+					textsCache.Add(mods[i]);
 			
-			return results;
+			return textsCache;
+		}
+
+		public static Color GetColor(string modifierName)
+		{
+			if (!DefaultUnityModifierSettings.TryGetEditor(out var defaultMod))
+				return Color.white;
+
+			return defaultMod.GetEditorColor(modifierName);
 		}
 	}
 }

@@ -97,8 +97,8 @@ namespace InsaneOne.Modifiers
 
 		public void AddValue(string type, float value)
 		{
-			if (values.ContainsKey(type))
-				SetValue(type, values[type] + value);
+			if (values.TryGetValue(type, out var currentValue))
+				SetValue(type, currentValue + value);
 			else
 				SetValue(type, value);
 		}
@@ -130,8 +130,14 @@ namespace InsaneOne.Modifiers
 				list.Remove(action);
 		}
 
+#if UNITY_EDITOR
+		/// <summary> Do not use it to modify inner state. Editor only feature. </summary>
 		public Dictionary<string, float> GetAllValuesInternal() => values;
-		
+
+		/// <summary> Do not use it to modify inner state. Editor only feature. </summary>
+		public List<Modifier> GetAllModifiersInternal() => modifiers;
+#endif
+
 		static float GetDefault(string type, bool useDefault)
 		{
 			if (!useDefault)

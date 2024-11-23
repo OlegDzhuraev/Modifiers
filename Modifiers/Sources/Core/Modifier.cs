@@ -48,10 +48,13 @@ namespace InsaneOne.Modifiers
 		
 		public bool IsTrue(string type) => GetValue(type) > 0;
 
-		/// <summary> Returns list of all params. Use only if you know what you doing. </summary>
+		/// <summary> Returns list of all params. Use only if you know what you're doing. </summary>
 		public List<ModifierParam> GetAllValues() => parameters;
 
-		/// <summary> Overrides param value with a new one. Use only if you know what you doing. </summary>
+		/// <summary> Returns dict of all params. Use only if you know what you're doing. </summary>
+		public Dictionary<string, float> GetAllInitializedValues() => initializedParams;
+
+		/// <summary> Overrides param value with a new one. Use only if you know what you're doing. </summary>
 		public void SetParamValue(string type, float value)
 		{
 			var newParam = new ModifierParam {Type = type, Value = value};
