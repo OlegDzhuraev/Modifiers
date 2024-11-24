@@ -68,6 +68,27 @@ namespace InsaneOne.Modifiers.Dev
 			}
 		}
 
+		public static void DrawParamGroupIndicator(Rect baseRect, string param)
+		{
+			var groupColor = GetColor(param);
+			DrawGroupIndicator(baseRect, groupColor);
+		}
+
+		public static void DrawGroupIndicator(Rect baseRect, string groupName)
+		{
+			var groupColor = GetGroupColor(groupName);
+			DrawGroupIndicator(baseRect, groupColor);
+		}
+
+		public static void DrawGroupIndicator(Rect baseRect, Color color)
+		{
+			if (color != Color.white)
+			{
+				var groupRect = new Rect(baseRect.x - groupIndicatorWidth, baseRect.y, groupIndicatorWidth, baseRect.height);
+				EditorGUI.DrawRect(groupRect, color);
+			}
+		}
+
 		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
 		{
 			var baseHeight = base.GetPropertyHeight(property, label);
@@ -137,12 +158,10 @@ namespace InsaneOne.Modifiers.Dev
 		}
 
 		public static Color GetColor(string modifierName)
-		{
-			if (!UnityModifiersSettings.TryGetEditor(out var defaultMod))
-				return Color.white;
+			=> !UnityModifiersSettings.TryGetEditor(out var defaultMod) ? Color.white : defaultMod.GetEditorColor(modifierName);
 
-			return defaultMod.GetEditorColor(modifierName);
-		}
+		public static Color GetGroupColor(string groupName)
+			=> !UnityModifiersSettings.TryGetEditor(out var defaultMod) ? Color.white : defaultMod.GetEditorGroupColor(groupName);
 	}
 }
 

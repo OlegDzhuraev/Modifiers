@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace InsaneOne.Modifiers
 {
@@ -18,10 +19,12 @@ namespace InsaneOne.Modifiers
 
 		[SerializeField] ModifierParamData[] supportedParams = Array.Empty<ModifierParamData>();
 
+		[FormerlySerializedAs("colorGroups")]
 		[Tooltip("Editor enhancement: you can mark your modifiers with color to group them visually.")]
-		[SerializeField] List<ColorGroup> colorGroups = new List<ColorGroup>();
+		[SerializeField] List<ParamGroup> groups = new List<ParamGroup>();
 
 		public ModifierParamData[] SupportedParams => supportedParams;
+		public List<ParamGroup> ParamGroups => groups;
 
 		/// <summary> Call it on game initialize to manually set up your own default settings, otherwise it will try to load it from resources. </summary>
 		public static void Setup(UnityModifiersSettings settings) => instance = settings;
@@ -35,10 +38,16 @@ namespace InsaneOne.Modifiers
 			return null;
 		}
 
-		public Color GetEditorColor(string modifierName)
+		public Color GetEditorColor(string paramName)
 		{
-			foreach (var colorGroup in colorGroups.Where(colorGroup => colorGroup.Included.Contains(modifierName)))
-				return colorGroup.Color;
+			var data = GetModifierParamData(paramName);
+			return data == null ? Color.white : GetEditorGroupColor(data.Group);
+		}
+
+		public Color GetEditorGroupColor(string groupName)
+		{
+			foreach (var group in groups.Where(group => group.Name == groupName))
+				return group.Color;
 
 			return Color.white;
 		}
@@ -88,10 +97,9 @@ namespace InsaneOne.Modifiers
 	}
 
 	[Serializable]
-	public class ColorGroup
+	public class ParamGroup
 	{
-		[Tooltip("Names of parameters, included into this group.")]
-		public List<string> Included = new List<string>();
+		public string Name;
 		public Color Color = Color.white;
 	}
 }

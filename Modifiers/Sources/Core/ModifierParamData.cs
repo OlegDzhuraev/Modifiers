@@ -8,6 +8,9 @@ namespace InsaneOne.Modifiers
 	{
 		public string Name;
 
+		[ParamGroup]
+		public string Group;
+
 #if UNITY_5_3_OR_NEWER
 		[UnityEngine.SerializeReference, SubclassSelector]
 #endif
