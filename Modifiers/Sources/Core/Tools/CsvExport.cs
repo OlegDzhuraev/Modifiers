@@ -16,7 +16,7 @@ namespace InsaneOne.Modifiers.Tools
 			{
 				var modifier = modifiers[y - 1];
 				
-				foreach (var param in modifier.GetAllValues())
+				foreach (var param in modifier.Parameters)
 				{
 					var isFound = false;
 

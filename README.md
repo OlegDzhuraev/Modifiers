@@ -41,21 +41,24 @@ Modifiers extension allows you to:
 It is works nice with MonoBehaviour approach, in other cases you may prefer your own implementation. Also, there are still some limitations etc - for example, if your game have stats for different types of objects (items, characters, etc), it is not very comfy to work with them in one Enum.
 
 ## How to install
-You can install it by using Package Manager:
+First of all, you need install **dependencies**:
+- https://github.com/mackysoft/Unity-SerializeReferenceExtensions.git?path=Assets/MackySoft/MackySoft.SerializeReferenceExtensions#1.1.9
+
+Next, you can install this package by using Package Manager:
 https://github.com/OlegDzhuraev/Modifiers.git
 
 Alternative install: download repo as source code, unpack to your project. Also, you can check **Releases** for unitypackage.
 
 ## Quick start
 ### Setup steps
-1. Make a new **Default Unity Modifiers Settings** from the Right click context menu in the **Project Window** (or take it from the **Example** folder).
-2. Add some values into its **Supported Modifiers** list.
+1. On startup window should appear with request to create **Unity Modifiers Settings**. Also you can manually create it by Right click context menu in the **Project Window** (or take it from the **Example** folder).
+2. Add some values into its **Supported Params** list.
 3. To use it from code with more comfort, you need to generate constants (all examples use generated constants, so, better to do it). It can be found in the Top Menu -> Tools -> Insane One Modifiers -> Common... -> **Generate constsants button**. It will generate the **ModType** static class with a list of constants, similar to your strings list in the Settings asset. *It is not neseccary to generate it.*
 
 Also, remove the Example folder, if you not plan to work with it.
 
 ### Adding a new modifier types.
-Insert them to the **Supported Modifiers** list of the **Default Unity Modifiers Settings** asset. Example values can be removed.
+Insert them to the **Supported Params** list of the **Unity Modifiers Settings** asset. Example values can be removed.
 
 Don't forget about constants generation, if you're planning to use them.
 

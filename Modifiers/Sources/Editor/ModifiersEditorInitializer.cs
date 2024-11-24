@@ -7,7 +7,7 @@ namespace InsaneOne.Modifiers.Dev
 		[DidReloadScripts]
 		static void Initialize()
 		{
-			if (!DefaultUnityModifierSettings.TryGetEditor(out _))
+			if (!UnityModifiersSettings.TryGetEditor(out _))
 				ModifiersInitializeWindow.ShowWindow();
 		}
 	}

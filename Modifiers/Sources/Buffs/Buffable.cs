@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace InsaneOne.Modifiers.Buffs
 {
@@ -8,12 +9,12 @@ namespace InsaneOne.Modifiers.Buffs
 	{
 		public event Action<Buff> BuffAdded, BuffRemoved;
 
-		[SerializeField] Modifable modifable;
+		[SerializeField] Modifiable modifiable;
 
-		public Modifable Modifable
+		public Modifiable Modifiable
 		{
-			get => modifable;
-			set => modifable = value;
+			get => modifiable;
+			set => modifiable = value;
 		}
 		
 		readonly List<Buff> buffs = new List<Buff>();
@@ -42,7 +43,7 @@ namespace InsaneOne.Modifiers.Buffs
 				return;
 			
 			buffs.Add(buff);
-			modifable.Add(buff.Modifier);
+			modifiable.Add(buff.Modifier);
 			
 			if (buff.LifeTime > 0)
 				buffTimers.Add(new BuffTimer(buff));
@@ -63,7 +64,7 @@ namespace InsaneOne.Modifiers.Buffs
 
 		public void RemoveBuff(Buff buff)
 		{
-			modifable.Remove(buff.Modifier);
+			modifiable.Remove(buff.Modifier);
 			buffs.Remove(buff);
 			
 			BuffRemoved?.Invoke(buff);

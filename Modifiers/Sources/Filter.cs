@@ -22,7 +22,7 @@ namespace InsaneOne.Modifiers
 			ParamType = param;
 			Value = value;
 
-			var results = Modifable.FindAllWith(param, value, compareTolerance);
+			var results = Modifiable.FindAllWith(param, value, compareTolerance);
 			foreach (var go in results)
 				all.Add(go);
 

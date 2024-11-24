@@ -52,7 +52,7 @@ namespace InsaneOne.Modifiers.Tools
 		{
 			var rawModifiers = new Modifier[modifiers.Length];
 			for (var i = 0; i < rawModifiers.Length; i++)
-				rawModifiers[i] = modifiers[i].GetRaw();
+				rawModifiers[i] = modifiers[i].Modifier;
 				
 			return CsvExport.Export(rawModifiers);
 		}

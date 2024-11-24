@@ -5,12 +5,12 @@ namespace InsaneOne.Modifiers
 {
 	public static class ModifiersExtension
 	{
-		static Modifable Get(GameObject go)
+		static Modifiable Get(GameObject go)
 		{
-			if (!Modifable.all.TryGetValue(go, out var modifable))
-				modifable = go.TryGetComponent<Modifable>(out var comp) ? comp : go.AddComponent<Modifable>();
-			
-			return modifable;
+			if (!Modifiable.all.TryGetValue(go, out var modifiable))
+				modifiable = go.TryGetComponent<Modifiable>(out var comp) ? comp : go.AddComponent<Modifiable>();
+
+			return modifiable;
 		}
 		
 		public static void AddModifier(this GameObject go, UnityModifier modifier) => Get(go).Add(modifier);
@@ -20,6 +20,7 @@ namespace InsaneOne.Modifiers
 		public static void RemoveModifier(this GameObject go, Modifier modifier) => Get(go).Remove(modifier);
 		
 		public static float GetModifierValue(this GameObject go, string type) => Get(go).GetValue(type);
+		public static float GetModifierRawValue(this GameObject go, string type) => Get(go).GetRawValue(type);
 		public static int GetIntModifierValue(this GameObject go, string type) => (int)go.GetModifierValue(type);
 		public static bool IsModifierValueTrue(this GameObject go, string type) => Get(go).GetValue(type) > 0;
 		public static void AddModifierValue(this GameObject go, string type, float value) => Get(go).AddValue(type, value);

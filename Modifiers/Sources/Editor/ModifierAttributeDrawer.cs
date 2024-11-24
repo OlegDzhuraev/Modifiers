@@ -91,12 +91,12 @@ namespace InsaneOne.Modifiers.Dev
 
 		public static bool IsCorrectId(string textId)
 		{
-			if (!DefaultUnityModifierSettings.TryGetEditor(out var defaultMod))
+			if (!UnityModifiersSettings.TryGetEditor(out var defaultMod))
 				return false;
 			
-			var mods = defaultMod.SupportedModifiers;
+			var mods = defaultMod.SupportedParams;
 			for (var i = 0; i < mods.Length; i++)
-				if (mods[i] == textId)
+				if (mods[i].Name == textId)
 					return true;
 
 			return false;
@@ -104,18 +104,18 @@ namespace InsaneOne.Modifiers.Dev
 
 		public static string GetSimilarText(string startsWith)
 		{
-			if (startsWith == "" || !DefaultUnityModifierSettings.TryGetEditor(out var defaultMod))
+			if (startsWith == "" || !UnityModifiersSettings.TryGetEditor(out var defaultMod))
 				return "";
 			
-			var mods = DefaultUnityModifierSettings.Get().SupportedModifiers;
+			var mods = UnityModifiersSettings.Get().SupportedParams;
 			
 			for (var i = 0; i < mods.Length; i++)
-				if (mods[i] == startsWith)
-					return mods[i];
+				if (mods[i].Name == startsWith)
+					return mods[i].Name;
 
 			for (var i = 0; i < mods.Length; i++)
-				if (mods[i].StartsWith(startsWith))
-					return mods[i];
+				if (mods[i].Name.StartsWith(startsWith))
+					return mods[i].Name;
 
 			return "";
 		}
@@ -124,21 +124,21 @@ namespace InsaneOne.Modifiers.Dev
 		{
 			textsCache.Clear();
 
-			if (startsWith == "" || !DefaultUnityModifierSettings.TryGetEditor(out var defaultMod))
+			if (startsWith == "" || !UnityModifiersSettings.TryGetEditor(out var defaultMod))
 				return textsCache;
 			
-			var mods = defaultMod.SupportedModifiers;
+			var mods = defaultMod.SupportedParams;
 			
 			for (var i = 0; i < mods.Length; i++)
-				if (mods[i].Contains(startsWith))
-					textsCache.Add(mods[i]);
+				if (mods[i].Name.Contains(startsWith))
+					textsCache.Add(mods[i].Name);
 			
 			return textsCache;
 		}
 
 		public static Color GetColor(string modifierName)
 		{
-			if (!DefaultUnityModifierSettings.TryGetEditor(out var defaultMod))
+			if (!UnityModifiersSettings.TryGetEditor(out var defaultMod))
 				return Color.white;
 
 			return defaultMod.GetEditorColor(modifierName);

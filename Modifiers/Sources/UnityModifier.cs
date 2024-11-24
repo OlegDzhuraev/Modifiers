@@ -8,31 +8,20 @@ namespace InsaneOne.Modifiers
 	{
 		[SerializeField] Modifier modifier;
 
-		public Modifier GetRaw() => modifier;
-		
-		/// <summary> Use it before working with modifier instance. Use only on instances! Keep in mind, that instancing is not recommended, since instance is unique modifier and can be removed by reference of its template after.</summary>
-		protected void Init()
-		{
-			modifier = modifier.Clone();
-			modifier.Init();
-		}
+		public Modifier Modifier => modifier;
 
+#if UNITY_EDITOR
 		void OnValidate()
 		{
 			modifier ??= new Modifier();
-			
 			modifier.Name = name;
-
-#if UNITY_EDITOR
 			UnityEditor.EditorUtility.SetDirty(this);
-#endif
 		}
+#endif
 
-		public float GetValue(string type) => modifier.GetValue(type);
-		public bool IsTrue(string type) =>modifier.GetValue(type) > 0;
+		public float GetRawValue(string type) => modifier.GetRawValue(type);
+		public bool IsTrue(string type) => modifier.IsTrue(type);
 		
-		public List<ModifierParam> GetAllValuesInternal() => modifier.GetAllValues();
-		
-		internal void SetParamValue(string type, float value) => modifier.SetParamValue(type, value);
+		public List<ModifierParam> GetParameters() => modifier.Parameters;
 	}
 }

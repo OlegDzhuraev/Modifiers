@@ -4,12 +4,13 @@ using UnityEngine;
 namespace InsaneOne.Modifiers
 {
 	/// <summary> Can be used instead of MonoBehaviour to reduce code size. </summary>
-	[RequireComponent(typeof(Modifable))]
-	public abstract class ModifableBehaviour : MonoBehaviour
+	[RequireComponent(typeof(Modifiable))]
+	public abstract class ModifiableBehaviour : MonoBehaviour
 	{
 		public void SetValue(string type, float value) => gameObject.SetModifierValue(type, value);
 		public void AddValue(string type, float value) => gameObject.AddModifierValue(type, value);
 		public float GetValue(string type) => gameObject.GetModifierValue(type);
+		public float GetRawValue(string type) => gameObject.GetModifierRawValue(type);
 		public bool IsValueTrue(string type) => GetValue(type) > 0;
 		
 		public void AddTag(params string[] tags) => gameObject.AddTag(tags);

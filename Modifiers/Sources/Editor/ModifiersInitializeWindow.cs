@@ -16,7 +16,7 @@ namespace InsaneOne.Modifiers.Dev
 
 		void OnGUI()
 		{
-			if (DefaultUnityModifierSettings.TryGetEditor(out _))
+			if (UnityModifiersSettings.TryGetEditor(out _))
 			{
 				GUILayout.Label("Setup is finished!");
 
@@ -40,7 +40,7 @@ namespace InsaneOne.Modifiers.Dev
 
 		void Init()
 		{
-			var newData = ScriptableObject.CreateInstance<DefaultUnityModifierSettings>();
+			var newData = ScriptableObject.CreateInstance<UnityModifiersSettings>();
 
 			if (!AssetDatabase.IsValidFolder("Assets/Resources"))
 				AssetDatabase.CreateFolder("Assets", "Resources");

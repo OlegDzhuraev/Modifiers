@@ -7,8 +7,8 @@ using UnityEngine;
 
 namespace InsaneOne.Modifiers.Dev
 {
-	[CustomEditor(typeof(Modifable))]
-	public class ModifableEditor : Editor
+	[CustomEditor(typeof(Modifiable))]
+	public class ModifiableEditor : Editor
 	{
 		Editor modifierEditor;
 
@@ -18,36 +18,37 @@ namespace InsaneOne.Modifiers.Dev
 		{
 			DrawDefaultInspector();
 
-			var modifable = target as Modifable;
+			var modifiable = target as Modifiable;
 
-			if (!Application.isPlaying && modifable && modifable.DefaultModifiers != null)
+			if (!Application.isPlaying && modifiable && modifiable.DefaultModifiers != null)
 			{
-				foreach (var mod in modifable.DefaultModifiers)
+				foreach (var mod in modifiable.DefaultModifiers)
 				{
 					if (mod == null)
 						continue;
-					
+
 					CreateCachedEditor(mod, null, ref modifierEditor);
 					modifierEditor.OnInspectorGUI();
 				}
 			}
 
-			var primaryValues = modifable.GetAllValuesInternal();
+			var runtimeValues = modifiable!.GetAllValuesInternal();
 
-			DrawModifierValues("Current modifier values", primaryValues);
+			if (runtimeValues != null)
+				DrawModifierValues("Current modifier values", runtimeValues);
 
 			GUILayout.BeginVertical(EditorStyles.helpBox);
 			{
 				GUILayout.Label("Applied modifiers list", EditorStyles.boldLabel);
 				showFullModifiersInfo = GUILayout.Toggle(showFullModifiersInfo, "Show full info");
 
-				var modifiers = modifable.GetAllModifiersInternal();
+				var modifiers = modifiable.GetAllModifiersInternal();
 
 				foreach (var mod in modifiers)
 				{
 					if (showFullModifiersInfo)
 					{
-						var modValues = mod.GetAllInitializedValues();
+						var modValues = mod.Parameters;
 						DrawModifierValues(mod.Name, modValues);
 					}
 					else
@@ -59,8 +60,20 @@ namespace InsaneOne.Modifiers.Dev
 			GUILayout.EndVertical();
 		}
 
-		void DrawModifierValues(string title, Dictionary<string, float> values)
+		void DrawModifierValues(string title, List<ModifierParam> parameters)
 		{
+			var dict = new Dictionary<string, ModifierParam>();
+
+			foreach (var modifierParam in parameters)
+				dict.Add(modifierParam.Type, modifierParam);
+
+			DrawModifierValues(title, dict);
+		}
+
+		void DrawModifierValues(string title, Dictionary<string, ModifierParam> parameters)
+		{
+			UnityModifiersSettings.TryGetEditor(out var settings);
+
 			GUILayout.BeginVertical(EditorStyles.helpBox);
 			{
 				GUILayout.Label(title, EditorStyles.boldLabel);
@@ -70,14 +83,17 @@ namespace InsaneOne.Modifiers.Dev
 				var numberStyle = new GUIStyle(EditorStyles.numberField);
 				numberStyle.normal.textColor = Color.grey;
 
-				foreach (var (name, value) in values)
+				foreach (var (name, param) in parameters)
 				{
 					GUILayout.BeginHorizontal();
 					{
 						labelStyle.normal.textColor = ModifierAttributeDrawer.GetColor(name);
 						EditorGUILayout.SelectableLabel(name, labelStyle, GUILayout.MaxHeight(20));
-						EditorGUILayout.SelectableLabel(value.ToString(CultureInfo.InvariantCulture), numberStyle,
-							GUILayout.MaxHeight(20));
+
+						var processed = param.GetProcessedValue(settings);
+						var finalText = processed.ToString(CultureInfo.InvariantCulture) + (!Mathf.Approximately(processed, param.Value) ? $" ({param.Value.ToString(CultureInfo.InvariantCulture)})" : "");
+
+						EditorGUILayout.SelectableLabel(finalText, numberStyle, GUILayout.MaxHeight(20));
 					}
 					GUILayout.EndHorizontal();
 				}
