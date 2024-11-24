@@ -10,7 +10,7 @@ namespace InsaneOne.Modifiers
 	/// For example, you want to some MaxHealth value be 100 by default for any object - you set it there and do not need to manually add this Modifier to every game object,
 	/// which has MaxHealth parameter.</summary>
 	[CreateAssetMenu(fileName = "DefaultModifierSettings", menuName = "Modifiers/Modifier Settings")]
-	public sealed class UnityModifiersSettings : UnityModifier, IModifiersSettings
+	public sealed class UnityModifiersSettings : ScriptableObject, IModifiersSettings
 	{
 		const string DefaultName = "ModifierSettings";
 

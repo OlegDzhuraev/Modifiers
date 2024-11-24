@@ -78,10 +78,10 @@ namespace InsaneOne.Modifiers
 		public float GetValue(string type)
 		{
 			if (!Application.isPlaying)
-				return defaultModifiers.Length > 0 ? defaultModifiers[0].GetRawValue(type) : GetDefault(type, useDefaultIfNoValue);
+				return defaultModifiers.Length > 0 ? defaultModifiers[0].GetRawValue(type) : 0;
 
 			var isParamSet = baseModifier.TryGetValue(type, out var result);
-			return isParamSet ? result : GetDefault(type, useDefaultIfNoValue);
+			return isParamSet ? result : 0;
 		}
 
 		public bool IsTrue(string type) => GetValue(type) > 0;
@@ -96,20 +96,6 @@ namespace InsaneOne.Modifiers
 		/// <summary> Do not use it to modify inner state. Editor only feature. </summary>
 		public List<Modifier> GetAllModifiersInternal() => modifiers;
 #endif
-
-		/// <summary> Returns value from main config default modifier values. </summary>
-		static float GetDefault(string type, bool useDefault)
-		{
-			if (!useDefault)
-				return 0;
-			
-			var defaultValues = UnityModifiersSettings.Get();
-
-			if (defaultValues)
-				return defaultValues.GetRawValue(type);
-
-			return 0;
-		}
 
 		internal static List<GameObject> FindAllWith(string type, float value, float tolerance = 0.01f)
 		{
