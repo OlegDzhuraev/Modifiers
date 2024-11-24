@@ -90,7 +90,17 @@ namespace InsaneOne.Modifiers
 		public void UnsubFrom(string type, Action<float> action) => baseModifier.Observer.UnsubFrom(type, action);
 
 #if UNITY_EDITOR
-		/// <summary> Do not use it to modify inner state. Editor only feature. </summary>
+		/// <summary> Editor only feature. </summary>
+		public void AddDefault(UnityModifier modifier)
+		{
+			Array.Resize(ref defaultModifiers, defaultModifiers.Length + 1);
+
+			defaultModifiers[^1] = modifier;
+
+			UnityEditor.EditorUtility.SetDirty(this);
+		}
+
+		/// <summary> Editor only feature. Do not use it to modify inner state. </summary>
 		public Dictionary<string, ModifierParam> GetAllValuesInternal() => baseModifier?.GetValuesInternal();
 
 		/// <summary> Do not use it to modify inner state. Editor only feature. </summary>
