@@ -78,7 +78,7 @@ namespace InsaneOne.Modifiers
 
 		static bool IsMatchesFilter(Filter filter, GameObject go)
 		{
-			return IsMatchesFilter(filter, go.GetModifierValue(filter.ParamType));
+			return Modifiable.all.TryGetValue(go, out var modifiable) && IsMatchesFilter(filter, modifiable.GetValue(filter.ParamType));
 		}
 		
 		static bool IsMatchesFilter(Filter filter, float value)

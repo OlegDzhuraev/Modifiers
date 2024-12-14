@@ -1,3 +1,5 @@
+#if INSANEONE_MODIFIERS_EXTENSION
+
 using System;
 using UnityEngine;
 
@@ -27,3 +29,5 @@ namespace InsaneOne.Modifiers
 		public void UnsubFrom(string type, Action<float> action) => gameObject.UnsubFromModifier(type, action);
 	}
 }
+
+#endif

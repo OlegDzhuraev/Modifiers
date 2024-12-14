@@ -14,9 +14,9 @@ It is just replaces basic variables to a new thing called Modifier Param (wip na
 
 There is a **Modifier** class, which contains of user-defined parameter types, you can flexible change it. Every buff or other thing has its own Modifier. Modifier is a simple ScriptableObject, so every modifier is just an asset in project folder.
 
-There also **Modifable** class, which you can add for your character/weapon/etc. It contains basic params of this object (something like default Modifier), and can be affected by adding/removing other modifiers from code. Modifable is a MonoBehaviour, it can be added to your objects by drag n drop.
+There also **Modifiable** class, which you can add for your character/weapon/etc. It contains basic params of this object (something like default Modifier), and can be affected by adding/removing other modifiers from code. Modifable is a MonoBehaviour, it can be added to your objects by drag n drop.
 
-You can access Modifable parameters with a simple API and get values of your params - it automatically will summarize all modifiers, added to this object, and return final value, actual for this param.
+You can access Modifiable parameters with a simple API and get values of your params - it automatically will summarize all modifiers, added to this object, and return final value, actual for this param.
 
 All these parameters can be edited or added/removed at all without any code and project recompile. 
 
@@ -53,9 +53,7 @@ Alternative install: download repo as source code, unpack to your project. Also,
 ### Setup steps
 1. On startup window should appear with request to create **Unity Modifiers Settings**. Also you can manually create it by Right click context menu in the **Project Window** (or take it from the **Example** folder).
 2. Add some values into its **Supported Params** list.
-3. To use it from code with more comfort, you need to generate constants (all examples use generated constants, so, better to do it). It can be found in the Top Menu -> Tools -> Insane One Modifiers -> Common... -> **Generate constsants button**. It will generate the **ModType** static class with a list of constants, similar to your strings list in the Settings asset. *It is not neseccary to generate it.*
-
-Also, remove the Example folder, if you not plan to work with it.
+3. To use it from code with more comfort, you need to generate constants (all examples use generated constants, so, better to do it). It can be found in the Top Menu -> Tools -> Insane One Modifiers -> Common... -> **Generate constsants button**. It will generate the **ModType** static class with a list of constants, similar to your strings list in the Settings asset. *It is not necessary to generate it.*
 
 ### Adding a new modifier types.
 Insert them to the **Supported Params** list of the **Unity Modifiers Settings** asset. Example values can be removed.
@@ -64,7 +62,7 @@ Don't forget about constants generation, if you're planning to use them.
 
 #### How to rename already exist modifiers types
 It can look a kinda tricky comparing string type names to, for example, Enum usage, but it is easy with modern IDE. You need to:
-1. Replace string type name in all of assets (Prefabs and SO), using your IDE. Replace all of the **"OldName"** to the **"NewName"**. Note that quotes means strings, so include it in your replace request.
+1. Replace string type name in all assets (Prefabs and SO), using your IDE. Replace all the **"OldName"** to the **"NewName"**. Note that quotes means strings, so include it in your replace request.
 2. (only if you're using generated constants) rename the **OldName** constant to the **NewName** using your IDE. It will replace all code usages.
 3. (fully optional, also only if you're using generated constants) Generate new constants to approve that you renamed all correct.
 
@@ -82,6 +80,12 @@ Setup buff parameters, add buff modifiers.
 
 You can create your own buff class (derived from Buff) and add there your info, it can be icon, text id or something other.
 ## Code usage
+
+In order to use this package, you need to add scripting define symbol `INSANEONE_MODIFIERS_EXTENSION` to the **Project Settings**. 
+It enables extension methods for GameObject class and ModifiableBehaviour class, used as shortcut to modifiers methods.
+
+You also can skip this and use package without this define, but it not so handy and examples will not work.
+
 ### Adding and removing modifiers
 This is one of the most common actions. You add and remove stats for your characters etc regularly.
 ```cs 
@@ -100,7 +104,7 @@ void Start()
 ```
 
 ### Get actual value
-This is another most common action. To handle any values, you need to get them somehow. This example shows, how it done in this extension.
+This is another most common action. To handle any values, you need to get them somehow. This example shows, how it's done in this extension.
 ```cs
 // Getting value of Max Health param
 gameObject.GetModifierValue(ModType.MaxHealth);
@@ -154,10 +158,10 @@ void Update()
 }
 ```
 
-Other usage examples can be found in the Example folder.
+Other usage examples can be found in the **Example** package.
 
 ## Example
-You can find it in the Example folder, there is a sample scene.
+You can find it in the **Example** package, there is a sample scene.
 It shows simple character with Max Health, Regeneration and Defense parameters.
 Also, there is a "damager" which have Damage and Critical Chance parameters. Damage will be applied to the character on left mouse button click. Critical chance will be used to make x2 damage, if random value hits the chance.
 

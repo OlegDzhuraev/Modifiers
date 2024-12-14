@@ -1,3 +1,5 @@
+#if INSANEONE_MODIFIERS_EXTENSION
+
 using System;
 using UnityEngine;
 
@@ -83,3 +85,5 @@ namespace InsaneOne.Modifiers
 			=> Mathf.Approximately(go.GetModifierValue(type), other.GetModifierValue(type));
 	}
 }
+
+#endif
