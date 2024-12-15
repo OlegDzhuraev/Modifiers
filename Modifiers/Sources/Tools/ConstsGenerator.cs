@@ -40,8 +40,8 @@ namespace InsaneOne.Modifiers
 			var content = "";
 			var mods = defaultMod.SupportedParams;
 			
-			foreach (var mod in mods)
-				content += $"		public const string {mod} = \"{mod}\";\n";
+			foreach (var modData in mods)
+				content += $"		public const string {modData.Name} = \"{modData.Name}\";\n";
 			
 			result = result.Replace("#CONTENT", content);
 
