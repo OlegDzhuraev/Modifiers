@@ -18,7 +18,7 @@ namespace InsaneOne.Modifiers.Tools
 		void OnGUI()
 		{
 			if (GUILayout.Button("CSV Export..."))
-				UnityCsvExport.Init();
+				UnityCsvWindow.Init();
 			
 			if (GUILayout.Button("Generate constants"))
 				ConstsGenerator.Generate();
