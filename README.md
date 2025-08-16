@@ -22,13 +22,13 @@ All these parameters can be edited or added/removed at all without any code and 
 
 **Modifiers work example:**
 
-Character move speed without modifiers is **3**.
+Character `move speed` without modifiers is **3**.
 
-Some speed up buff adds extra **2** speed.
+Some `speed up buff` adds extra **2** speed.
 
-But also there is some debuff which really slows down character, its speed value **-4**.
+But also there is some `speed debuff` which really slows down character, its speed value **-4**.
 
-So, final value (returned by the API) of character speed is **1** (3 + 2 + (-4)).
+So, final value (returned by the API) of character `move speed` is **1** (`3 + 2 + (-4)`).
 
 ## Why just not to use OOP and variables
 Modifiers extension allows you to:
@@ -54,7 +54,7 @@ Alternative install: download repo as source code, unpack to your project. Also,
 
 Also, remove the Example folder, if you not plan to work with it.
 
-### Adding a new modifier types.
+### Adding a new modifier types
 Insert them to the **Supported Modifiers** list of the **Default Unity Modifiers Settings** asset. Example values can be removed.
 
 Don't forget about constants generation, if you're planning to use them.
@@ -78,7 +78,11 @@ Right click in the Project window -> Modifiers -> **New buff**.
 Setup buff parameters, add buff modifiers.
 
 You can create your own buff class (derived from Buff) and add there your info, it can be icon, text id or something other.
+
 ## Code usage
+
+**Note for the new versions:** To use most of the features listed below, you need to add value `INSANEONE_MODIFIERS_UNITY_EXTENSION` into the **Scripting Define Symbols** in Unity.
+
 ### Adding and removing modifiers
 This is one of the most common actions. You add and remove stats for your characters etc regularly.
 ```cs 
