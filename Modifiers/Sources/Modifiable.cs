@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace InsaneOne.Modifiers
 {
+	[DefaultExecutionOrder(100)]
 	public class Modifiable : MonoBehaviour
 	{
 		internal static readonly Dictionary<GameObject, Modifiable> all = new ();
@@ -73,7 +74,7 @@ namespace InsaneOne.Modifiers
 		}
 
 		/// <summary> Manually adds value. Use only if you know what are you doing! </summary>
-		public void AddValue(string type, float value) => SetValue(type, value);
+		public void AddValue(string type, float value) => SetValue(type, GetValue(type) + value);
 
 		public float GetValue(string type)
 		{
@@ -88,6 +89,12 @@ namespace InsaneOne.Modifiers
 
 		public void SubTo(string type, Action<float> action) => baseModifier.Observer.SubTo(type, action);
 		public void UnsubFrom(string type, Action<float> action) => baseModifier.Observer.UnsubFrom(type, action);
+
+		public static void TransferModifiers(GameObject to, GameObject from, List<string> modifiersTypes)
+		{
+			foreach (var modType in modifiersTypes)
+				to.SetModifierValue(modType, from.GetModifierValue(modType));
+		}
 
 #if UNITY_EDITOR
 		/// <summary> Editor only feature. </summary>
@@ -118,9 +125,17 @@ namespace InsaneOne.Modifiers
 			return searchCollection;
 		}
 
-        /// <summary> Call this method on game initialization to initialize Modifiables system. </summary>
+		/// <summary> Call this method on game initialization to initialize Modifiables system. </summary>
 		public static void Init() => all.Clear();
 
 		public float GetRawValue(string type) => baseModifier.GetRawValue(type);
+
+		public void ClearDefault()
+		{
+			foreach (var def in defaultModifiers)
+				Remove(def);
+
+			defaultModifiers = Array.Empty<UnityModifier>();
+		}
 	}
 }

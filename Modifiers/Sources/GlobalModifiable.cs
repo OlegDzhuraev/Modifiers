@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace InsaneOne.Modifiers
 {
-	public sealed class GlobalModifable
+	public sealed class GlobalModifiable
 	{
 		static GameObject instance;
 
@@ -11,7 +11,7 @@ namespace InsaneOne.Modifiers
 			if (instance != null)
 				return instance;
 
-			var go = new GameObject("GlobalModifable_Scene");
+			var go = new GameObject("GlobalModifiable_Scene");
 			go.AddComponent<Modifiable>();
 
 			instance = go;
