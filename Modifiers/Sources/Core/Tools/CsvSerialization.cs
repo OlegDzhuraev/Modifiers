@@ -113,7 +113,7 @@ namespace InsaneOne.Modifiers.Tools
 
 				for (var j = 1; j < parts.Length; j++)
 				{
-					if (string.IsNullOrWhiteSpace(parts[i]))
+					if (string.IsNullOrWhiteSpace(parts[j]))
 						continue;
 						
 					if (float.TryParse(parts[j], NumberStyles.Float, formatProvider, out var parsedValue))
