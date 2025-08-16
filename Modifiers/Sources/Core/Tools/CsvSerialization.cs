@@ -113,6 +113,9 @@ namespace InsaneOne.Modifiers.Tools
 
 				for (var j = 1; j < parts.Length; j++)
 				{
+					if (string.IsNullOrWhiteSpace(parts[i]))
+						continue;
+						
 					if (float.TryParse(parts[j], NumberStyles.Float, formatProvider, out var parsedValue))
 						values.Add(new ModifierParam { Type = headers[j], Value = parsedValue });
 					else
