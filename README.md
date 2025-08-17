@@ -74,6 +74,7 @@ Right click in the **Project window -> Modifiers -> New buff**.
 Setup buff parameters, add buff modifiers.
 
 You can create your own buff class (derived from Buff) and add there your info, it can be icon, text id or something other.
+
 ## Code usage
 
 In order to use this package, you need to add scripting define symbol `INSANEONE_UNITY_MODIFIERS_EXTENSION` to the **Project Settings**. 
