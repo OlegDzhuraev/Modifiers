@@ -103,7 +103,7 @@ namespace InsaneOne.Modifiers.Tools
 
 			for (var i = 1; i < rows.Length; i++)
 			{
-				var parts = rows[i].Split(Separator, StringSplitOptions.RemoveEmptyEntries); 
+				var parts = rows[i].Split(Separator);
 				var rowName = parts[0];
 
 				if (string.IsNullOrWhiteSpace(rowName))
@@ -115,7 +115,7 @@ namespace InsaneOne.Modifiers.Tools
 				{
 					if (string.IsNullOrWhiteSpace(parts[j]))
 						continue;
-						
+
 					if (float.TryParse(parts[j], NumberStyles.Float, formatProvider, out var parsedValue))
 						values.Add(new ModifierParam { Type = headers[j], Value = parsedValue });
 					else
