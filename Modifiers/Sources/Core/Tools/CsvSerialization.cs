@@ -48,12 +48,17 @@ namespace InsaneOne.Modifiers.Tools
 
 			table[0, 0] = ZeroCellName;
 
+			var requireFilter = settings.ParamsFilter.Length > 0;
+
 			for (var y = 1; y <= modifiers.Length; y++)
 			{
 				var modifier = modifiers[y - 1];
 
 				foreach (var param in modifier.Parameters)
 				{
+					if (requireFilter && !settings.IsParamInFilter(param.Type))
+						continue;
+
 					var isFound = false;
 
 					for (var x = 0; x < MaxCount - 1; x++)

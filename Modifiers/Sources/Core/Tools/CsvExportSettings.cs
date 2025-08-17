@@ -23,5 +23,14 @@ namespace InsaneOne.Modifiers.Tools
 	{
 		public Modifier[] Modifiers;
 		public string[] ParamsFilter;
+
+		public bool IsParamInFilter(string paramType)
+		{
+			foreach (var filterParam in ParamsFilter)
+				if (filterParam.Equals(paramType))
+					return true;
+
+			return false;
+		}
 	}
 }
