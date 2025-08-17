@@ -28,9 +28,13 @@ namespace InsaneOne.Modifiers.Tools
 {
 	public class UnityCsvWindow : EditorWindow
 	{
+		ObjectField exportSettingsField;
 		ObjectField exportPresetField;
 		TextField importPathField;
 		VisualElement exportButtonsRow;
+
+		CsvSerialization csvSerializer;
+		CsvParamGroupsSerializer csvGroupsSerializer;
 
 		[MenuItem("Tools/InsaneOne Modifiers/CSV Tools...")]
 		public static void Init()
@@ -43,7 +47,15 @@ namespace InsaneOne.Modifiers.Tools
 		void CreateGUI()
 		{
 			var root = rootVisualElement;
+			csvSerializer = new CsvSerialization();
+			
+			CreateModifiersExport(root);
+			CreateModifiersImport(root);
+			CreateGroupsExport(root);
+		}
 
+		void CreateModifiersExport(VisualElement root)
+		{
 			var exportLbl = new Label("Export")
 			{
 				style =
@@ -54,11 +66,16 @@ namespace InsaneOne.Modifiers.Tools
 				},
 			};
 
+			exportSettingsField = new ObjectField { objectType = typeof(UnityModifiersSettings) };
+			exportSettingsField.RegisterCallback<ChangeEvent<Object>>(evt =>
+			{
+				exportButtonsRow.SetEnabled(evt.newValue is UnityModifiersSettings && exportPresetField.value is CsvExportPreset);
+			});
+
 			exportPresetField = new ObjectField { objectType = typeof(CsvExportPreset) };
 			exportPresetField.RegisterCallback<ChangeEvent<Object>>(evt =>
 			{
-				var preset = evt.newValue as CsvExportPreset;
-				exportButtonsRow.SetEnabled(preset != null);
+				exportButtonsRow.SetEnabled(evt.newValue is CsvExportPreset && exportSettingsField.value is UnityModifiersSettings);
 			});
 
 			var exportConsoleBtn = new Button(OnExportConsoleClick) { text = "Export CSV to console" };
@@ -70,8 +87,16 @@ namespace InsaneOne.Modifiers.Tools
 			};
 			exportButtonsRow.Add(exportConsoleBtn);
 			exportButtonsRow.Add(exportFileBtn);
-			exportButtonsRow.SetEnabled(exportPresetField.value is CsvExportPreset);
+			exportButtonsRow.SetEnabled(exportPresetField.value is CsvExportPreset && exportSettingsField.value is UnityModifiersSettings);
+			
+			root.Add(exportLbl);
+			root.Add(exportSettingsField);
+			root.Add(exportPresetField);
+			root.Add(exportButtonsRow);
+		}
 
+		void CreateModifiersImport(VisualElement root)
+		{
 			var importLbl = new Label("Import")
 			{
 				style =
@@ -95,12 +120,29 @@ namespace InsaneOne.Modifiers.Tools
 
 			var importBtn = new Button(OnImportClick) { text = "Import CSV to exist assets" };
 
-			root.Add(exportLbl);
-			root.Add(exportPresetField);
-			root.Add(exportButtonsRow);
 			root.Add(importLbl);
 			root.Add(importPathRow);
 			root.Add(importBtn);
+		}
+
+		void CreateGroupsExport(VisualElement root)
+		{
+			csvGroupsSerializer = new CsvParamGroupsSerializer();
+			var exportBtn = new Button(OnExportGroupsClick) { text = "Export groups CSV" };
+			
+			root.Add(exportBtn);
+		}
+
+		void OnExportGroupsClick()
+		{
+			if (exportSettingsField.value is not UnityModifiersSettings modifiersSettings)
+				return;
+			
+			var path = Path.Combine(Application.dataPath, $"ModifierGroupsExport_{MakeRandomId()}.csv");
+			var result = csvGroupsSerializer.Serialize(modifiersSettings.ParamGroups);
+			File.WriteAllText(path, result);
+			
+			Debug.Log($"Successfully exported Modifiers Param Groups to CSV at path: {path}");
 		}
 
 		void OnBrowseClick()
@@ -113,7 +155,9 @@ namespace InsaneOne.Modifiers.Tools
 		void OnExportConsoleClick()
 		{
 			var settings = (exportPresetField.value as CsvExportPreset)!.GetExportSettings();
-			var result = CsvSerialization.Serialize(settings);
+			settings.SupportedParams = (exportSettingsField.value as UnityModifiersSettings)!.SupportedParams;
+			
+			var result = csvSerializer.Serialize(settings);
 			Debug.Log(result);
 		}
 
@@ -122,8 +166,10 @@ namespace InsaneOne.Modifiers.Tools
 			try
 			{
 				var settings = (exportPresetField.value as CsvExportPreset)!.GetExportSettings();
-				var path = Path.Combine(Application.dataPath, "ModifiersExport_rid_" + Random.Range(0, 9999) + ".csv");
-				var result = CsvSerialization.Serialize(settings);
+				settings.SupportedParams = (exportSettingsField.value as UnityModifiersSettings)!.SupportedParams;
+				
+				var path = Path.Combine(Application.dataPath, $"ModifiersExport_{MakeRandomId()}.csv");
+				var result = csvSerializer.Serialize(settings);
 
 				File.WriteAllText(path, result);
 				importPathField.value = path;
@@ -153,7 +199,7 @@ namespace InsaneOne.Modifiers.Tools
 		{
 			var importedAmount = 0;
 			var importedNames = "";
-			var modifiers = CsvSerialization.Deserialize(csvString);
+			var modifiers = csvSerializer.Deserialize(csvString);
 
 			foreach (var mod in modifiers)
 			{
@@ -173,6 +219,8 @@ namespace InsaneOne.Modifiers.Tools
 
 			Debug.Log($"Imported {importedAmount} modifiers:\n{importedNames}");
 		}
+
+		static string MakeRandomId() => $"rid_{Random.Range(0, 9999)}";
 	}
 }
 #endif

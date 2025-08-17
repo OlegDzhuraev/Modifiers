@@ -41,8 +41,8 @@ namespace InsaneOne.Modifiers
 		public void AddModifier(UnityModifier modifier) => gameObject.AddModifier(modifier);
 		public void RemoveModifier(UnityModifier modifier) => gameObject.RemoveModifier(modifier);
 		
-		public void SubTo(string type, Action<float> action) => gameObject.SubToModifier(type, action);
-		public void UnsubFrom(string type, Action<float> action) => gameObject.UnsubFromModifier(type, action);
+		public void SubTo(string type, ModifierChangedCallback action) => gameObject.SubToModifier(type, action);
+		public void UnsubFrom(string type, ModifierChangedCallback action) => gameObject.UnsubFromModifier(type, action);
 	}
 }
 

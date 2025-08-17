@@ -47,8 +47,8 @@ namespace InsaneOne.Modifiers
 		public static void AddModifierValue(this GameObject go, string type, float value) => Get(go).AddValue(type, value);
 		public static void SetModifierValue(this GameObject go, string type, float value) => Get(go).SetValue(type, value);
 		
-		public static void SubToModifier(this GameObject go, string type, Action<float> action) => Get(go).SubTo(type, action);
-		public static void UnsubFromModifier(this GameObject go, string type, Action<float> action) => Get(go).UnsubFrom(type, action);
+		public static void SubToModifier(this GameObject go, string type, ModifierChangedCallback action) => Get(go).SubTo(type, action);
+		public static void UnsubFromModifier(this GameObject go, string type, ModifierChangedCallback action) => Get(go).UnsubFrom(type, action);
 
 		public static void AddTag(this GameObject go, params string[] tags)
 		{

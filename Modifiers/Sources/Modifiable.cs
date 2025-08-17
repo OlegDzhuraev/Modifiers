@@ -104,8 +104,8 @@ namespace InsaneOne.Modifiers
 
 		public bool IsTrue(string type) => GetValue(type) > 0;
 
-		public void SubTo(string type, Action<float> action) => baseModifier.Observer.SubTo(type, action);
-		public void UnsubFrom(string type, Action<float> action) => baseModifier.Observer.UnsubFrom(type, action);
+		public void SubTo(string type, ModifierChangedCallback action) => baseModifier.Observer.SubTo(type, action);
+		public void UnsubFrom(string type, ModifierChangedCallback action) => baseModifier.Observer.UnsubFrom(type, action);
 
 		public static void TransferModifiers(GameObject to, GameObject from, List<string> modifiersTypes)
 		{

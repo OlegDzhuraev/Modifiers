@@ -14,27 +14,28 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
 
 namespace InsaneOne.Modifiers
 {
+	public delegate void ModifierChangedCallback(float newValue);
+
 	public class ModificatorObserver
 	{
-		readonly Dictionary<string, List<Action<float>>> subscriptions = new ();
+		readonly Dictionary<string, List<ModifierChangedCallback>> subscriptions = new ();
 
-		public void SubTo(string type, Action<float> action)
+		public void SubTo(string type, ModifierChangedCallback action)
 		{
 			if (!subscriptions.TryGetValue(type, out var list))
 			{
-				list = new List<Action<float>>();
+				list = new List<ModifierChangedCallback>();
 				subscriptions[type] = list;
 			}
 
 			list.Add(action);
 		}
 
-		public void UnsubFrom(string type, Action<float> action)
+		public void UnsubFrom(string type, ModifierChangedCallback action)
 		{
 			if (subscriptions.TryGetValue(type, out var list))
 				list.Remove(action);

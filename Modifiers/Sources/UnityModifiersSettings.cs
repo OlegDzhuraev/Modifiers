@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+#if UNITY_5_3_OR_NEWER
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +37,7 @@ namespace InsaneOne.Modifiers
 
 		[FormerlySerializedAs("colorGroups")]
 		[Tooltip("Editor enhancement: you can mark your modifiers with color to group them visually.")]
-		[SerializeField] List<ParamGroup> groups = new List<ParamGroup>();
+		[SerializeField] List<ParamGroup> groups = new ();
 
 		public ModifierParamData[] SupportedParams => supportedParams;
 		public List<ParamGroup> ParamGroups => groups;
@@ -76,10 +76,7 @@ namespace InsaneOne.Modifiers
 				Debug.LogWarning($"No Modifier Settings was setup by using {nameof(Setup)} method! Trying to find it in Resources...");
 
 				instance = Resources.Load<UnityModifiersSettings>(DefaultName);
-				
-				//if (instance)
-				//	instance.Init(instance);
-				//else
+			
 				if (!instance)
 					Debug.LogWarning("No Modifier Settings asset exist!");
 			}
@@ -119,3 +116,5 @@ namespace InsaneOne.Modifiers
 		public Color Color = Color.white;
 	}
 }
+
+#endif

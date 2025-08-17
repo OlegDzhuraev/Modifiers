@@ -23,6 +23,7 @@ namespace InsaneOne.Modifiers.Tools
 	{
 		public Modifier[] Modifiers;
 		public string[] ParamsFilter;
+		public ModifierParamData[] SupportedParams;
 
 		public bool IsParamInFilter(string paramType)
 		{
