@@ -18,17 +18,19 @@
 using System;
 using System.IO;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
 namespace InsaneOne.Modifiers.Tools
 {
 	public class UnityCsvWindow : EditorWindow
 	{
-		[SerializeField] UnityModifier[] modifiers;
-
-		string importPath;
-		SerializedObject so;
+		ObjectField exportPresetField;
+		TextField importPathField;
+		VisualElement exportButtonsRow;
 
 		[MenuItem("Tools/InsaneOne Modifiers/CSV Tools...")]
 		public static void Init()
@@ -38,71 +40,112 @@ namespace InsaneOne.Modifiers.Tools
 			window.Show();
 		}
 
-		void OnEnable()
+		void CreateGUI()
 		{
-			ScriptableObject target = this;
-			so = new SerializedObject(target);
+			var root = rootVisualElement;
+
+			var exportLbl = new Label("Export")
+			{
+				style =
+				{
+					fontSize = 14,
+					unityFontStyleAndWeight = new StyleEnum<FontStyle>(FontStyle.Bold),
+					paddingBottom = 6, paddingTop = 6, paddingLeft = 4,
+				},
+			};
+
+			exportPresetField = new ObjectField { objectType = typeof(CsvExportPreset) };
+			exportPresetField.RegisterCallback<ChangeEvent<Object>>(evt =>
+			{
+				var preset = evt.newValue as CsvExportPreset;
+				exportButtonsRow.SetEnabled(preset != null);
+			});
+
+			var exportConsoleBtn = new Button(OnExportConsoleClick) { text = "Export CSV to console" };
+			var exportFileBtn = new Button(OnExportFileClick) { text = "Export CSV to file in Assets" };
+
+			exportButtonsRow = new VisualElement
+			{
+				style = { flexDirection = new StyleEnum<FlexDirection>(FlexDirection.Row) },
+			};
+			exportButtonsRow.Add(exportConsoleBtn);
+			exportButtonsRow.Add(exportFileBtn);
+			exportButtonsRow.SetEnabled(exportPresetField.value is CsvExportPreset);
+
+			var importLbl = new Label("Import")
+			{
+				style =
+				{
+					fontSize = 14,
+					unityFontStyleAndWeight = new StyleEnum<FontStyle>(FontStyle.Bold),
+					paddingBottom = 6, paddingTop = 6, paddingLeft = 4,
+				},
+			};
+
+			var importPathRow = new VisualElement
+			{
+				style = { flexDirection = new StyleEnum<FlexDirection>(FlexDirection.Row) },
+			};
+
+			importPathField = new TextField("Import from path") { style = { flexGrow = 1 } };
+			var browseBtn = new Button(OnBrowseClick) { text = "Browse..." };
+
+			importPathRow.Add(importPathField);
+			importPathRow.Add(browseBtn);
+
+			var importBtn = new Button(OnImportClick) { text = "Import CSV to exist assets" };
+
+			root.Add(exportLbl);
+			root.Add(exportPresetField);
+			root.Add(exportButtonsRow);
+			root.Add(importLbl);
+			root.Add(importPathRow);
+			root.Add(importBtn);
 		}
-		
-		void OnGUI()
+
+		void OnBrowseClick()
 		{
-			so.Update();
-			var serialProp = so.FindProperty("modifiers");
+			var path = EditorUtility.OpenFilePanel("Select a file", Application.dataPath, "csv");
+			if (!string.IsNullOrEmpty(path))
+				importPathField.value = path;
+		}
 
-			GUILayout.Label("Export", EditorStyles.whiteLargeLabel);
-			EditorGUILayout.PropertyField(serialProp, true);
-			so.ApplyModifiedProperties();
-			
-			var prevEnabled = GUI.enabled;
-			GUI.enabled = modifiers is {Length: > 0};
+		void OnExportConsoleClick()
+		{
+			var settings = (exportPresetField.value as CsvExportPreset)!.GetExportSettings();
+			var result = CsvSerialization.Serialize(settings);
+			Debug.Log(result);
+		}
 
-			if (GUILayout.Button("Export CSV to console"))
-				Debug.Log(MakeExportString(modifiers));
-			
-			if (GUILayout.Button("Export CSV to file in Assets"))
+		void OnExportFileClick()
+		{
+			try
 			{
-				try
-				{
-					var path = Path.Combine(Application.dataPath, "ModifiersExport_rid_" + Random.Range(0, 9999) + ".csv");
-					File.WriteAllText(path, MakeExportString(modifiers));
-					importPath = path;
+				var settings = (exportPresetField.value as CsvExportPreset)!.GetExportSettings();
+				var path = Path.Combine(Application.dataPath, "ModifiersExport_rid_" + Random.Range(0, 9999) + ".csv");
+				var result = CsvSerialization.Serialize(settings);
 
-					Debug.Log($"Successfully exported modifiers CSV at path: {path}");
-				}
-				catch (Exception e)
-				{
-					Debug.LogError("Failed to export modifiers. Error: " + e);
-				}
+				File.WriteAllText(path, result);
+				importPathField.value = path;
+
+				Debug.Log($"Successfully exported modifiers CSV at path: {path}");
 			}
-
-			GUI.enabled = prevEnabled;
-
-			GUILayout.Label("Import", EditorStyles.whiteLargeLabel);
-			GUILayout.BeginHorizontal();
+			catch (Exception e)
 			{
-				GUILayout.Label("Import from path");
-				importPath = GUILayout.TextField(importPath);
+				Debug.LogError("Failed to export modifiers. Error: " + e);
 			}
+		}
 
-			if (GUILayout.Button("Browse..."))
+		void OnImportClick()
+		{
+			try
 			{
-				var path = EditorUtility.OpenFilePanel("Select a file", Application.dataPath, "csv");
-				if (!string.IsNullOrEmpty(path))
-					importPath = path;
+				var csvString = File.ReadAllText(importPathField.value);
+				Import(csvString);
 			}
-			GUILayout.EndHorizontal();
-
-			if (GUILayout.Button("Import CSV to exist assets"))
+			catch (Exception e)
 			{
-				try
-				{
-					var csvString = File.ReadAllText(importPath);
-					Import(csvString);
-				}
-				catch (Exception e)
-				{
-					Debug.LogError("Failed to import modifiers. Error: " + e);
-				}
+				Debug.LogError("Failed to import modifiers. Error: " + e);
 			}
 		}
 
@@ -129,15 +172,6 @@ namespace InsaneOne.Modifiers.Tools
 			}
 
 			Debug.Log($"Imported {importedAmount} modifiers:\n{importedNames}");
-		}
-
-		static string MakeExportString(UnityModifier[] mods)
-		{
-			var rawModifiers = new Modifier[mods.Length];
-			for (var i = 0; i < rawModifiers.Length; i++)
-				rawModifiers[i] = mods[i].Modifier;
-				
-			return CsvSerialization.Serialize(rawModifiers);
 		}
 	}
 }

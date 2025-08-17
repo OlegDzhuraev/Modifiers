@@ -40,8 +40,9 @@ namespace InsaneOne.Modifiers.Tools
 		 *	|-------------------------------------------|
 		 */
 
-		public static string Serialize(Modifier[] modifiers)
+		public static string Serialize(CsvExportSettings settings)
 		{
+			var modifiers = settings.Modifiers;
 			var table = new string[MaxCount, modifiers.Length + 1];
 			var currentParam = 1;
 
