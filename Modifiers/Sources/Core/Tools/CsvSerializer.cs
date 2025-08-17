@@ -27,7 +27,10 @@ namespace InsaneOne.Modifiers.Tools
 	{
 		public const char Separator = ';';
 		public const char RowSeparator = '\n';
-		static readonly string ZeroCellName = "M_Title";
+
+		const string LineEndToRemove = "\r";
+		const string ZeroCellName = "M_Title";
+
 		static readonly CultureInfo formatProvider = new ("de-DE"); // for commas in numbers (1,23)
 
 		/*
@@ -119,6 +122,8 @@ namespace InsaneOne.Modifiers.Tools
 
 		public List<Modifier> Deserialize(string csv)
 		{
+			csv = csv.Replace(LineEndToRemove, ""); // fix for wrong line endings
+
 			if (string.IsNullOrWhiteSpace(csv))
 				throw new FormatException($"Empty CSV passed to deserialization!");
 
