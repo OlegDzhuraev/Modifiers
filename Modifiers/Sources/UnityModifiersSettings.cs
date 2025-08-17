@@ -43,7 +43,7 @@ namespace InsaneOne.Modifiers
 		public List<ParamGroup> ParamGroups => groups;
 
 		/// <summary> Call it on game initialize to manually set up your own default settings, otherwise it will try to load it from resources. </summary>
-		public static void Setup(UnityModifiersSettings settings) => instance = settings;
+		public void SetAsActive() => instance = this;
 
 		public ModifierParamData GetModifierParamData(string paramName)
 		{
@@ -73,7 +73,7 @@ namespace InsaneOne.Modifiers
 		{
 			if (!instance)
 			{
-				Debug.LogWarning($"No Modifier Settings was setup by using {nameof(Setup)} method! Trying to find it in Resources...");
+				Debug.LogWarning($"No Modifier Settings was setup by using {nameof(SetAsActive)} method! Trying to find it in Resources...");
 
 				instance = Resources.Load<UnityModifiersSettings>(DefaultName);
 			
