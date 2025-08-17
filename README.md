@@ -2,33 +2,28 @@
 Easily make flexible parameters for your characters, items, abilities, buffs in Unity.
 
 ## Use cases
-Your game character has some parameters, for example - move speed, max health, etc.
+For example, your game character has various parameters, such as move speed, max health and others.
 
-You need to add possibility to affect these params - potions buffs, which will increase values of character parameters; enemies attacks debuffs, which will decrease these values, etc. And all of these should be combined easily.
+You may want to modify these parameters dynamically — for example, using potion buffs to increase character parameters, enemy attack debuffs to decrease them. These effects should also stack and combine seamlessly.
 
-So, there you can use this extension. 
-
+This extension provides an easy way to implement such a system.
 
 ## How it works
-It is just replaces basic variables to a new thing called Modifier Param (wip naming). It can be max health, damage, move speed - any other thing. These values can be added to params group, which is simple called Modifier. This group describes params of some object - character, buff, item, etc.
+Instead of using basic variables, the system replaces them with a **Modifier Param** (name subject to change). This can represent any parameter — max health, damage, movement speed, or any other value. These parameters can be grouped into a **Modifier**, which defines the stats of an object — such as a character, buff, item, or anything else.
 
-There is a **Modifier** class, which contains of user-defined parameter types, you can flexible change it. Every buff or other thing has its own Modifier. Modifier is a simple ScriptableObject, so every modifier is just an asset in project folder.
+There is a **Modifier** class, which contains of user-defined parameter types, you can flexible change it. Every buff or other thing has its own **Modifier**. For Unity, there is a **UnityModifier** class, which inherits from `ScriptableObject` — each modifier exists as a standalone asset in your project, making it easy to create and manage.
 
-There also **Modifable** class, which you can add for your character/weapon/etc. It contains basic params of this object (something like default Modifier), and can be affected by adding/removing other modifiers from code. Modifable is a MonoBehaviour, it can be added to your objects by drag n drop.
+There also **Modifiable** class, which you can add for your character/weapon/etc. It contains basic params of this object (something like default Modifier), and can be affected by adding/removing other modifiers from code. Modifable is a `MonoBehaviour`, it can be added to your objects by drag n drop.
 
-You can access Modifable parameters with a simple API and get values of your params - it automatically will summarize all modifiers, added to this object, and return final value, actual for this param.
+You can access Modifiable parameters with a simple API and get values of your params — it automatically will summarize all modifiers, added to this object, and return final value, actual for this param.
 
 All these parameters can be edited or added/removed at all without any code and project recompile. 
 
 **Modifiers work example:**
-
-Character `move speed` without modifiers is **3**.
-
-Some `speed up buff` adds extra **2** speed.
-
-But also there is some `speed debuff` which really slows down character, its speed value **-4**.
-
-So, final value (returned by the API) of character `move speed` is **1** (`3 + 2 + (-4)`).
+1. Character move speed without modifiers is **3**.
+2. Some speed up buff adds extra **2** speed.
+3. Also there is some debuff which really slows down character, its speed value **-4**.
+4. So, final value (returned by the API) of character speed is **1** (3 + 2 + (-4)).
 
 ## Why just not to use OOP and variables
 Modifiers extension allows you to:
@@ -38,42 +33,43 @@ Modifiers extension allows you to:
 4. Easy to add new or remove old ones with minimum refactoring amount, which can be easily done with modern IDEs.
 5. Easily move some of your gameplay systems between projects, since Modifiers allow your code to not depend on other game classes (check the example for more info).
 
-It is works nice with MonoBehaviour approach, in other cases you may prefer your own implementation. Also, there are still some limitations etc - for example, if your game have stats for different types of objects (items, characters, etc), it is not very comfy to work with them in one Enum.
+It is works nice with MonoBehaviour approach, in other cases you may prefer your own implementation. Also, there are still some limitations — for example, if your game have stats for different types of objects (items, characters, etc), it is not very comfy to work with them in one Enum.
 
 ## How to install
-You can install it by using Package Manager:
+First of all, you need install **dependencies**:
+- https://github.com/mackysoft/Unity-SerializeReferenceExtensions.git?path=Assets/MackySoft/MackySoft.SerializeReferenceExtensions#1.1.9
+
+Next, you can install this package by using Package Manager:
 https://github.com/OlegDzhuraev/Modifiers.git
 
 Alternative install: download repo as source code, unpack to your project. Also, you can check **Releases** for unitypackage.
 
 ## Quick start
 ### Setup steps
-1. Make a new **Default Unity Modifiers Settings** from the Right click context menu in the **Project Window** (or take it from the **Example** folder).
-2. Add some values into its **Supported Modifiers** list.
-3. To use it from code with more comfort, you need to generate constants (all examples use generated constants, so, better to do it). It can be found in the Top Menu -> Tools -> Insane One Modifiers -> Common... -> **Generate constsants button**. It will generate the **ModType** static class with a list of constants, similar to your strings list in the Settings asset. *It is not neseccary to generate it.*
-
-Also, remove the Example folder, if you not plan to work with it.
+1. On startup window should appear with request to create **Unity Modifiers Settings**. Also you can manually create it by Right click context menu in the **Project Window** (or take it from the **Example** folder).
+2. Add some values into its **Supported Params** list.
+3. To use it from code with more comfort, you need to generate constants (all examples use generated constants, so, better to do it). It can be found in the **Top Menu -> Tools -> Insane One Modifiers -> Common... -> Generate constsants button**. It will generate the **ModType** static class with a list of constants, similar to your strings list in the Settings asset. *It is not necessary to generate it.*
 
 ### Adding a new modifier types
-Insert them to the **Supported Modifiers** list of the **Default Unity Modifiers Settings** asset. Example values can be removed.
+Insert them to the **Supported Params** list of the **Unity Modifiers Settings** asset. Example values can be removed.
 
 Don't forget about constants generation, if you're planning to use them.
 
 #### How to rename already exist modifiers types
 It can look a kinda tricky comparing string type names to, for example, Enum usage, but it is easy with modern IDE. You need to:
-1. Replace string type name in all of assets (Prefabs and SO), using your IDE. Replace all of the **"OldName"** to the **"NewName"**. Note that quotes means strings, so include it in your replace request.
+1. Replace string type name in all assets (Prefabs and SO), using your IDE. Replace all the **"OldName"** to the **"NewName"**. Note that quotes means strings, so include it in your replace request.
 2. (only if you're using generated constants) rename the **OldName** constant to the **NewName** using your IDE. It will replace all code usages.
 3. (fully optional, also only if you're using generated constants) Generate new constants to approve that you renamed all correct.
 
 ### How to create a new modifier?
-Right click in the Project window -> Modifiers -> **New modifier**.
+Right click in the **Project window -> Modifiers -> New modifier**.
 
 Next, you're need to add required params to the list in this modifier. It can be Health, Damage, etc.
 
 ### How to create buff?
 Buffs are modifiers with a lifetime and stacks amount parameter. It is just simplifies creation of this functionality.
 
-Right click in the Project window -> Modifiers -> **New buff**.
+Right click in the **Project window -> Modifiers -> New buff**.
 
 Setup buff parameters, add buff modifiers.
 
@@ -81,11 +77,38 @@ You can create your own buff class (derived from Buff) and add there your info, 
 
 ## Code usage
 
-**Note for the new versions:** To use most of the features listed below, you need to add value `INSANEONE_MODIFIERS_UNITY_EXTENSION` into the **Scripting Define Symbols** in Unity.
+In order to use this package, you need to add scripting define symbol `INSANEONE_UNITY_MODIFIERS_EXTENSION` to the **Project Settings**. 
+It enables extension methods for GameObject class and **ModifiableBehaviour** class, used as shortcut to modifiers methods.
+
+You also can skip this and use package without this define, but it not so handy and examples will not work.
+
+### Initialization
+In order to make all things work, you need to have some initialization `MonoBehaviour` script. It can look like this:
+```cs
+using UnityEngine;
+using InsaneOne.Modifiers;
+
+public class ModifiersInitialization : MonoBehaviour
+{
+  [SerializeField] UnityModifiersSettings settings;
+  
+  void Start()
+  {
+    settings.SetAsActive(); // loads this instance of UnityModifiersSettings into the game as active config
+  }
+}
+```
+
+You need to do this before using in runtime (play mode) any features of package. You can place this init in your own game initialization script.
 
 ### Adding and removing modifiers
-This is one of the most common actions. You add and remove stats for your characters etc regularly.
-```cs 
+This is one of the most common actions. You will add and remove stats for your characters and other objects regularly.
+```cs
+using UnityEngine;
+using InsaneOne.Modifiers;
+
+// <...>
+
 [SerializeField] Modifier modifier;
 
 void Start() 
@@ -101,7 +124,7 @@ void Start()
 ```
 
 ### Get actual value
-This is another most common action. To handle any values, you need to get them somehow. This example shows, how it done in this extension.
+This is another most common action. To handle any values, you need to get them somehow. This example shows, how it's done in this extension.
 ```cs
 // Getting value of Max Health param
 gameObject.GetModifierValue(ModType.MaxHealth);
@@ -109,7 +132,7 @@ gameObject.GetModifierValue(ModType.MaxHealth);
 
 ### Tags
 If you need to tag object and check if object have some tags, you can use these methods.
-Tags are just simple numbers like other stats, but these methods allows to work with them easily and make code more short.
+**Tags** are just simple numbers like other stats, but these methods allows to work with them easily and make code more short.
 
 ```cs
 gameObject.AddTag(ModType.TagA);
@@ -155,10 +178,10 @@ void Update()
 }
 ```
 
-Other usage examples can be found in the Example folder.
+Other usage examples can be found in the **Example** package.
 
 ## Example
-You can find it in the Example folder, there is a sample scene.
+You can find it in the **Example** package, there is a sample scene.
 It shows simple character with Max Health, Regeneration and Defense parameters.
 Also, there is a "damager" which have Damage and Critical Chance parameters. Damage will be applied to the character on left mouse button click. Critical chance will be used to make x2 damage, if random value hits the chance.
 
@@ -166,4 +189,4 @@ Also, there is a "damager" which have Damage and Critical Chance parameters. Dam
 Battleproofed in the **[Echo Storm](https://store.steampowered.com/app/2282200/Echo_Storm)** game.
 
 ## License
-MIT
+Apache 2.0

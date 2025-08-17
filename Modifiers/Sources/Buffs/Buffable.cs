@@ -1,6 +1,23 @@
+/*
+ * Copyright 2025 Oleg Dzhuraev <godlikeaurora@gmail.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace InsaneOne.Modifiers.Buffs
 {
@@ -8,12 +25,12 @@ namespace InsaneOne.Modifiers.Buffs
 	{
 		public event Action<Buff> BuffAdded, BuffRemoved;
 
-		[SerializeField] Modifable modifable;
+		[SerializeField] Modifiable modifiable;
 
-		public Modifable Modifable
+		public Modifiable Modifiable
 		{
-			get => modifable;
-			set => modifable = value;
+			get => modifiable;
+			set => modifiable = value;
 		}
 		
 		readonly List<Buff> buffs = new List<Buff>();
@@ -42,7 +59,7 @@ namespace InsaneOne.Modifiers.Buffs
 				return;
 			
 			buffs.Add(buff);
-			modifable.Add(buff.Modifier);
+			modifiable.Add(buff.Modifier);
 			
 			if (buff.LifeTime > 0)
 				buffTimers.Add(new BuffTimer(buff));
@@ -63,7 +80,7 @@ namespace InsaneOne.Modifiers.Buffs
 
 		public void RemoveBuff(Buff buff)
 		{
-			modifable.Remove(buff.Modifier);
+			modifiable.Remove(buff.Modifier);
 			buffs.Remove(buff);
 			
 			BuffRemoved?.Invoke(buff);

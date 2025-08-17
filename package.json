@@ -4,7 +4,7 @@
     "displayName": "Modifiers",
     "description": "Game development Modifiers extension for Unity (C#). MIT License.",
     "unity": "2023.1",
-    "version": "0.1.0",
+    "version": "0.3.0",
     "keywords": [
         "unity",
         "modifiers",

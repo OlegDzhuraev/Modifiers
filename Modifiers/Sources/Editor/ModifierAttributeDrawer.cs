@@ -1,3 +1,19 @@
+/*
+ * Copyright 2025 Oleg Dzhuraev <godlikeaurora@gmail.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 #if UNITY_EDITOR
 
 using System.Collections.Generic;
@@ -68,6 +84,27 @@ namespace InsaneOne.Modifiers.Dev
 			}
 		}
 
+		public static void DrawParamGroupIndicator(Rect baseRect, string param)
+		{
+			var groupColor = GetColor(param);
+			DrawGroupIndicator(baseRect, groupColor);
+		}
+
+		public static void DrawGroupIndicator(Rect baseRect, string groupName)
+		{
+			var groupColor = GetGroupColor(groupName);
+			DrawGroupIndicator(baseRect, groupColor);
+		}
+
+		public static void DrawGroupIndicator(Rect baseRect, Color color)
+		{
+			if (color != Color.white)
+			{
+				var groupRect = new Rect(baseRect.x - groupIndicatorWidth, baseRect.y, groupIndicatorWidth, baseRect.height);
+				EditorGUI.DrawRect(groupRect, color);
+			}
+		}
+
 		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
 		{
 			var baseHeight = base.GetPropertyHeight(property, label);
@@ -91,12 +128,12 @@ namespace InsaneOne.Modifiers.Dev
 
 		public static bool IsCorrectId(string textId)
 		{
-			if (!DefaultUnityModifierSettings.TryGetEditor(out var defaultMod))
+			if (!UnityModifiersSettings.TryGetEditor(out var defaultMod))
 				return false;
 			
-			var mods = defaultMod.SupportedModifiers;
+			var mods = defaultMod.SupportedParams;
 			for (var i = 0; i < mods.Length; i++)
-				if (mods[i] == textId)
+				if (mods[i].Name == textId)
 					return true;
 
 			return false;
@@ -104,18 +141,18 @@ namespace InsaneOne.Modifiers.Dev
 
 		public static string GetSimilarText(string startsWith)
 		{
-			if (startsWith == "" || !DefaultUnityModifierSettings.TryGetEditor(out var defaultMod))
+			if (startsWith == "" || !UnityModifiersSettings.TryGetEditor(out var defaultMod))
 				return "";
 			
-			var mods = DefaultUnityModifierSettings.Get().SupportedModifiers;
+			var mods = UnityModifiersSettings.Get().SupportedParams;
 			
 			for (var i = 0; i < mods.Length; i++)
-				if (mods[i] == startsWith)
-					return mods[i];
+				if (mods[i].Name == startsWith)
+					return mods[i].Name;
 
 			for (var i = 0; i < mods.Length; i++)
-				if (mods[i].StartsWith(startsWith))
-					return mods[i];
+				if (mods[i].Name.StartsWith(startsWith))
+					return mods[i].Name;
 
 			return "";
 		}
@@ -124,25 +161,23 @@ namespace InsaneOne.Modifiers.Dev
 		{
 			textsCache.Clear();
 
-			if (startsWith == "" || !DefaultUnityModifierSettings.TryGetEditor(out var defaultMod))
+			if (startsWith == "" || !UnityModifiersSettings.TryGetEditor(out var defaultMod))
 				return textsCache;
 			
-			var mods = defaultMod.SupportedModifiers;
+			var mods = defaultMod.SupportedParams;
 			
 			for (var i = 0; i < mods.Length; i++)
-				if (mods[i].Contains(startsWith))
-					textsCache.Add(mods[i]);
+				if (mods[i].Name.Contains(startsWith))
+					textsCache.Add(mods[i].Name);
 			
 			return textsCache;
 		}
 
 		public static Color GetColor(string modifierName)
-		{
-			if (!DefaultUnityModifierSettings.TryGetEditor(out var defaultMod))
-				return Color.white;
+			=> !UnityModifiersSettings.TryGetEditor(out var defaultMod) ? Color.white : defaultMod.GetEditorColor(modifierName);
 
-			return defaultMod.GetEditorColor(modifierName);
-		}
+		public static Color GetGroupColor(string groupName)
+			=> !UnityModifiersSettings.TryGetEditor(out var defaultMod) ? Color.white : defaultMod.GetEditorGroupColor(groupName);
 	}
 }
 

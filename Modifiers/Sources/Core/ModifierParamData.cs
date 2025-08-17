@@ -14,20 +14,28 @@
  * limitations under the License.
  */
 
-using UnityEngine;
+using System;
+using InsaneOne.Modifiers.Processors;
 
-namespace InsaneOne.Modifiers.Buffs
+namespace InsaneOne.Modifiers
 {
-    [CreateAssetMenu(fileName = "NewBuff", menuName = "Modifiers/New buff")]
-    public class Buff : ScriptableObject
-    {
-        [SerializeField] UnityModifier modifier;
-        [Tooltip("Buff lifetime in seconds. Use 0 value to make endless buff.")]
-        [SerializeField, Min(0f)] float lifeTime = 3f;
-        [SerializeField, Min(1)] int maxStacks = 5;
-        
-        public UnityModifier Modifier => modifier;
-        public float LifeTime => lifeTime;
-        public int MaxStacks => maxStacks;
-    }
+	[Serializable]
+	public class ModifierParamData
+	{
+		public string Name;
+
+		[ParamGroup]
+		public string Group;
+
+#if UNITY_5_3_OR_NEWER && INSANEONE_MODIFIERS_FANCY_FORMAT
+		public UnityEngine.UI.Image Icon;
+		public string TextMeshIconId;
+		public string Description;
+#endif
+
+#if UNITY_5_3_OR_NEWER
+		[UnityEngine.SerializeReference, SubclassSelector]
+#endif
+		public ModifierProcessor[] Processors;
+	}
 }

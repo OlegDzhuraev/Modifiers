@@ -1,76 +1,72 @@
+/*
+ * Copyright 2025 Oleg Dzhuraev <godlikeaurora@gmail.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 using System;
 using System.Collections.Generic;
 
 namespace InsaneOne.Modifiers
 {
 	[Serializable]
-	public sealed class Modifier
+	public class Modifier
 	{
-		
 #if UNITY_5_3_OR_NEWER
 		[UnityEngine.HideInInspector]
 #endif
-		 public string Name;
+		public string Name;
 		
 #if UNITY_5_3_OR_NEWER
-		[UnityEngine.SerializeField]
+		[UnityEngine.Serialization.FormerlySerializedAs("parameters")] [UnityEngine.SerializeField]
 #endif
-		List<ModifierParam> parameters = new ();
+		public List<ModifierParam> Parameters = new ();
 		
-		[NonSerialized] readonly Dictionary<string, float> initializedParams = new ();
-		[NonSerialized] bool isInitialized;
+		public bool IsEmpty() => Parameters.Count == 0;
 
-		/// <summary> Use it when before working with modifier. </summary>
-		public void Init()
+		public float GetRawValue(string type)
 		{
-			if (isInitialized)
-				return;
-					
-			foreach (var param in parameters)
-				initializedParams[param.Type] = param.Value;
+			var result = new ModifierParam { Value = 0 };
 
-			isInitialized = true;
-		}
-		
-		public bool IsEmpty() => parameters.Count == 0;
-		
-		public float GetValue(string type)  
-		{
-			if (isInitialized && initializedParams.TryGetValue(type, out var initResult))
-				return initResult;
-			
-			foreach (var modifierParam in parameters)
+			foreach (var modifierParam in Parameters)
 				if (modifierParam.Type == type)
-					return modifierParam.Value;
-			
-			return 0;
+				{
+					result = modifierParam;
+					break;
+				}
+
+			return result.Value;
 		}
-		
-		public bool IsTrue(string type) => GetValue(type) > 0;
 
-		/// <summary> Returns list of all params. Use only if you know what you're doing. </summary>
-		public List<ModifierParam> GetAllValues() => parameters;
-
-		/// <summary> Returns dict of all params. Use only if you know what you're doing. </summary>
-		public Dictionary<string, float> GetAllInitializedValues() => initializedParams;
+		public bool IsTrue(string type) => GetRawValue(type) > 0;
 
 		/// <summary> Overrides param value with a new one. Use only if you know what you're doing. </summary>
 		public void SetParamValue(string type, float value)
 		{
 			var newParam = new ModifierParam {Type = type, Value = value};
-			
-			for (var i = 0; i < parameters.Count; i++)
+
+			for (var i = 0; i < Parameters.Count; i++)
 			{
-				if (parameters[i].Type == type)
+				if (Parameters[i].Type == type)
 				{
-					parameters[i] = newParam;
+					Parameters[i] = newParam;
 					return;
 				}
 			}
-			
-			parameters.Add(newParam);
+
+			Parameters.Add(newParam);
 		}
 
-		public Modifier Clone() => new () { parameters = new List<ModifierParam>(parameters) };
+		public Modifier Clone() => new () { Parameters = new List<ModifierParam>(Parameters) };
 	}
 }
