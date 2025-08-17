@@ -22,8 +22,8 @@ using System.Text;
 
 namespace InsaneOne.Modifiers.Tools
 {
-	// todo insaneone - maybe make universal matrix importer? To support not only Modifiers data
-	public class CsvSerialization
+	// todo insaneone.modifiers: maybe make universal matrix importer? To support not only Modifiers data
+	public class CsvSerializer
 	{
 		public const char Separator = ';';
 		public const char RowSeparator = '\n';
@@ -111,7 +111,7 @@ namespace InsaneOne.Modifiers.Tools
 						sb.Append(Separator);
 				}
 
-				sb.AppendLine();
+				sb.Append(RowSeparator);
 			}
 
 			return sb.ToString();

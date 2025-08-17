@@ -33,7 +33,7 @@ namespace InsaneOne.Modifiers.Tools
 		TextField importPathField;
 		VisualElement exportButtonsRow;
 
-		CsvSerialization csvSerializer;
+		CsvSerializer csvSerializer;
 		CsvParamGroupsSerializer csvGroupsSerializer;
 
 		[MenuItem("Tools/InsaneOne Modifiers/CSV Tools...")]
@@ -47,7 +47,7 @@ namespace InsaneOne.Modifiers.Tools
 		void CreateGUI()
 		{
 			var root = rootVisualElement;
-			csvSerializer = new CsvSerialization();
+			csvSerializer = new CsvSerializer();
 			
 			CreateModifiersExport(root);
 			CreateModifiersImport(root);

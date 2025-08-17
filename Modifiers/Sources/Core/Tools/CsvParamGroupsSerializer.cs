@@ -32,9 +32,9 @@ namespace InsaneOne.Modifiers.Tools
 			{
 				var colorStr = ColorUtility.ToHtmlStringRGB(paramGroup.Color);
 				sb.Append(paramGroup.Name);
-				sb.Append(CsvSerialization.Separator);
+				sb.Append(CsvSerializer.Separator);
 				sb.Append(colorStr);
-				sb.AppendLine();
+				sb.Append(CsvSerializer.RowSeparator);
 			}
 
 			return sb.ToString();
@@ -42,12 +42,12 @@ namespace InsaneOne.Modifiers.Tools
 
 		public ParamGroup[] Deserialize(string csvString)
 		{
-			var rows = csvString.Split(new[] { CsvSerialization.RowSeparator }, StringSplitOptions.RemoveEmptyEntries);
+			var rows = csvString.Split(new[] { CsvSerializer.RowSeparator }, StringSplitOptions.RemoveEmptyEntries);
 			var result = new ParamGroup[rows.Length]; // todo insaneone.modifiers: -1?
 
 			for (var y = 0; y < rows.Length; y++)
 			{
-				var parts = rows[y].Split(CsvSerialization.Separator);
+				var parts = rows[y].Split(CsvSerializer.Separator);
 
 				if (!ColorUtility.TryParseHtmlString(parts[1], out var color))
 					throw new Exception("Wrong group color in input csvString! It should be in HEX format (like HTML).");
