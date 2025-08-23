@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-#if UNITY_EDITOR
-
 using UnityEditor;
 using UnityEngine;
 
@@ -41,5 +39,3 @@ namespace InsaneOne.Modifiers.Tools
 		}
 	}
 }
-
-#endif
