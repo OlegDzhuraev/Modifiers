@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-#if UNITY_EDITOR
 using System;
 using System.IO;
+using InsaneOne.UIElements;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -28,9 +28,11 @@ namespace InsaneOne.Modifiers.Tools
 {
 	public class UnityCsvWindow : EditorWindow
 	{
+		const string LastPathPrefsName = "modifiers_csv_last_import_path";
+
 		ObjectField exportSettingsField;
 		ObjectField exportPresetField;
-		TextField importPathField;
+		SelectFileField importField;
 		VisualElement exportButtonsRow;
 
 		CsvSerializer csvSerializer;
@@ -107,21 +109,13 @@ namespace InsaneOne.Modifiers.Tools
 				},
 			};
 
-			var importPathRow = new VisualElement
-			{
-				style = { flexDirection = new StyleEnum<FlexDirection>(FlexDirection.Row) },
-			};
-
-			importPathField = new TextField("Import from path") { style = { flexGrow = 1 } };
-			var browseBtn = new Button(OnBrowseClick) { text = "Browse..." };
-
-			importPathRow.Add(importPathField);
-			importPathRow.Add(browseBtn);
+			importField = new SelectFileField("Import from path", "csv");
+			importField.SetPath(EditorPrefs.GetString(LastPathPrefsName, ""));
 
 			var importBtn = new Button(OnImportClick) { text = "Import CSV to exist assets" };
 
 			root.Add(importLbl);
-			root.Add(importPathRow);
+			root.Add(importField);
 			root.Add(importBtn);
 		}
 
@@ -145,13 +139,6 @@ namespace InsaneOne.Modifiers.Tools
 			Debug.Log($"Successfully exported Modifiers Param Groups to CSV at path: {path}");
 		}
 
-		void OnBrowseClick()
-		{
-			var path = EditorUtility.OpenFilePanel("Select a file", Application.dataPath, "csv");
-			if (!string.IsNullOrEmpty(path))
-				importPathField.value = path;
-		}
-
 		void OnExportConsoleClick()
 		{
 			var settings = (exportPresetField.value as CsvExportPreset)!.GetExportSettings();
@@ -172,7 +159,7 @@ namespace InsaneOne.Modifiers.Tools
 				var result = csvSerializer.Serialize(settings);
 
 				File.WriteAllText(path, result);
-				importPathField.value = path;
+				importField.SetPath(path);
 
 				Debug.Log($"Successfully exported modifiers CSV at path: {path}");
 			}
@@ -184,9 +171,11 @@ namespace InsaneOne.Modifiers.Tools
 
 		void OnImportClick()
 		{
+			EditorPrefs.SetString(LastPathPrefsName, importField.Path);
+
 			try
 			{
-				var csvString = File.ReadAllText(importPathField.value);
+				var csvString = File.ReadAllText(importField.Path);
 				Import(csvString);
 			}
 			catch (Exception e)
@@ -223,4 +212,3 @@ namespace InsaneOne.Modifiers.Tools
 		static string MakeRandomId() => $"rid_{Random.Range(0, 9999)}";
 	}
 }
-#endif

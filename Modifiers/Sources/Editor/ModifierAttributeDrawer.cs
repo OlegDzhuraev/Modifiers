@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-#if UNITY_EDITOR
-
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -180,5 +178,3 @@ namespace InsaneOne.Modifiers.Dev
 			=> !UnityModifiersSettings.TryGetEditor(out var defaultMod) ? Color.white : defaultMod.GetEditorGroupColor(groupName);
 	}
 }
-
-#endif
