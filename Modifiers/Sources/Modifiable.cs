@@ -20,6 +20,7 @@ using UnityEngine;
 
 namespace InsaneOne.Modifiers
 {
+	[DisallowMultipleComponent]
 	public class Modifiable : MonoBehaviour
 	{
 		internal static readonly Dictionary<GameObject, Modifiable> all = new ();
