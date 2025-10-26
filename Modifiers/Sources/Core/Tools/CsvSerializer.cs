@@ -76,7 +76,7 @@ namespace InsaneOne.Modifiers.Tools
 				})
 				.ToList(); // to always place parameters in same order
 
-			for (var x = 1; x < sortedParamNames.Count; x++)
+			for (var x = 1; x <= sortedParamNames.Count; x++)
 			{
 				var paramName = sortedParamNames[x - 1];
 				table[x, 0] = paramName;
@@ -107,7 +107,7 @@ namespace InsaneOne.Modifiers.Tools
 			{
 				for (var x = 0; x < columnsCount; x++)
 				{
-					var needSeparator = x < columnsCount - 2;
+					var needSeparator = x < columnsCount - 1;
 					sb.Append(table[x, y]);
 
 					if (needSeparator)

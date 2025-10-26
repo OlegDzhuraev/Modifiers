@@ -20,7 +20,7 @@ using UnityEngine;
 namespace InsaneOne.Modifiers
 {
 	[CreateAssetMenu(fileName = "NewModifier", menuName = "Modifiers/New modifier")]
-	public class UnityModifier : ScriptableObject
+	public class UnityModifier : ScriptableModifierProvider
 	{
 		[SerializeField] Modifier modifier;
 
@@ -41,13 +41,15 @@ namespace InsaneOne.Modifiers
 		public List<ModifierParam> GetParameters() => modifier.Parameters;
 
 #if UNITY_EDITOR
+		public override Modifier EditorGetModifier() => modifier;
+
 		/// <summary> Used for import purposes. Be careful with this method! Editor-only now.</summary>
 		/// <param name="modifier"></param>
-		public void EditorSetModifier(Modifier modifier)
+		public override void EditorSetModifier(Modifier modifier)
 		{
 			this.modifier = modifier;
 			UnityEditor.EditorUtility.SetDirty(this);
 		}
-#endif
 	}
+#endif
 }

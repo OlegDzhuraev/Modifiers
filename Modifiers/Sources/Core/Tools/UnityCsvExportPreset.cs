@@ -15,6 +15,7 @@
  */
 
 #if UNITY_5_3_OR_NEWER
+using System;
 using UnityEngine;
 
 namespace InsaneOne.Modifiers.Tools
@@ -23,7 +24,7 @@ namespace InsaneOne.Modifiers.Tools
 	public class CsvExportPreset : ScriptableObject
 	{
 		[Tooltip("Collection of modifiers to export.")]
-		[SerializeField] UnityModifier[] modifiers = new UnityModifier[0];
+		[SerializeField] ScriptableModifierProvider[] modifiers = Array.Empty<ScriptableModifierProvider>();
 
 		[Tooltip("If empty, no filter will be applied")]
 		[SerializeField, Modifier] string[] paramsFilter;
@@ -39,10 +40,7 @@ namespace InsaneOne.Modifiers.Tools
 			};
 
 			for (var i = 0; i < modifiers.Length; i++)
-			{
-				var unityModifier = modifiers[i];
-				settings.Modifiers[i] = unityModifier.Modifier;
-			}
+				settings.Modifiers[i] = modifiers[i].EditorGetModifier();
 
 			return settings;
 		}

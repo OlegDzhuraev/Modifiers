@@ -192,16 +192,21 @@ namespace InsaneOne.Modifiers.Tools
 
 			foreach (var mod in modifiers)
 			{
-				var suitableAssetGuids = AssetDatabase.FindAssets($"{mod.Name} t:{nameof(UnityModifier)}");
+				var suitableAssetGuids = AssetDatabase.FindAssets($"{mod.Name} t:{nameof(ScriptableModifierProvider)}");
 
 				foreach (var guid in suitableAssetGuids)
 				{
 					var path = AssetDatabase.GUIDToAssetPath(guid);
-					var unityMod = AssetDatabase.LoadAssetAtPath<UnityModifier>(path);
+					var modifierProvider = AssetDatabase.LoadAssetAtPath<ScriptableModifierProvider>(path);
 
-					unityMod.EditorSetModifier(mod);
+					var oldModifier = modifierProvider.EditorGetModifier();
 
-					importedNames += unityMod.name + "\n";
+					if (oldModifier.Name != mod.Name)
+						continue;
+
+					modifierProvider.EditorSetModifier(mod);
+
+					importedNames += modifierProvider.name + "\n";
 					importedAmount++;
 				}
 			}
