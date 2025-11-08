@@ -38,7 +38,8 @@ namespace InsaneOne.Modifiers
 		public static void RemoveModifier(this GameObject go, UnityModifier modifier) => Get(go).Remove(modifier);
 		public static void RemoveModifier(this GameObject go, Modifier modifier) => Get(go).Remove(modifier);
 
-		public static void TransferModifiers(this GameObject to, GameObject from, List<string> modifiersTypes) => Modifiable.TransferModifiers(to, from, modifiersTypes);
+		public static void TransferModifiers(this GameObject to, GameObject from, List<string> modifiersTypes, bool ignoreZeroes = true)
+			=> Modifiable.TransferModifiers(to, from, modifiersTypes, ignoreZeroes);
 
 		public static float GetModifierValue(this GameObject go, string type) => Get(go).GetValue(type);
 		public static float GetModifierRawValue(this GameObject go, string type) => Get(go).GetRawValue(type);

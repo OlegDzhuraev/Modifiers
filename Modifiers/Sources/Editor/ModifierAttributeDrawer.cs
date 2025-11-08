@@ -31,6 +31,12 @@ namespace InsaneOne.Modifiers.Dev
 
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
+			if (property.serializedObject.isEditingMultipleObjects)
+			{
+				EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("Modifier: Multi-selection is not supported."));
+				return;
+			}
+
 			position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
 			
 			var isCorrect = IsCorrectId(property.stringValue);
@@ -105,6 +111,9 @@ namespace InsaneOne.Modifiers.Dev
 
 		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
 		{
+			if (property.serializedObject.isEditingMultipleObjects)
+				return 20f;
+
 			var baseHeight = base.GetPropertyHeight(property, label);
 			
 			return baseHeight + CalculateExtraHeight(property);

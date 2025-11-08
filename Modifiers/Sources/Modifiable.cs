@@ -108,10 +108,17 @@ namespace InsaneOne.Modifiers
 		public void SubTo(string type, ModifierChangedCallback action) => baseModifier.Observer.SubTo(type, action);
 		public void UnsubFrom(string type, ModifierChangedCallback action) => baseModifier.Observer.UnsubFrom(type, action);
 
-		public static void TransferModifiers(GameObject to, GameObject from, List<string> modifiersTypes)
+		public static void TransferModifiers(GameObject to, GameObject from, List<string> modifiersTypes, bool ignoreZeroes = true)
 		{
 			foreach (var modType in modifiersTypes)
-				to.SetModifierValue(modType, from.GetModifierValue(modType));
+			{
+				var value = from.GetModifierValue(modType);
+
+				if (ignoreZeroes && Mathf.Approximately(value, 0))
+					continue;
+
+				to.SetModifierValue(modType, value);
+			}
 		}
 
 #if UNITY_EDITOR
