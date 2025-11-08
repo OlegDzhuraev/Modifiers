@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+#if UNITY_5_3_OR_NEWER
 using UnityEditor;
 using UnityEngine;
 
@@ -21,7 +21,7 @@ namespace InsaneOne.Modifiers.Tools
 {
 	public class UnityModifiersTools : EditorWindow
 	{
-		[MenuItem("Tools/InsaneOne Modifiers/Common...")]
+		[MenuItem("Tools/InsaneOne Modifiers/Common...", priority = 200)]
 		public static void Init()
 		{
 			var window = (UnityModifiersTools)GetWindow(typeof(UnityModifiersTools));
@@ -39,3 +39,4 @@ namespace InsaneOne.Modifiers.Tools
 		}
 	}
 }
+#endif

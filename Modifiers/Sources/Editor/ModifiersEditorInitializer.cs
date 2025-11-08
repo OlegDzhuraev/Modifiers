@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#if UNITY_5_3_OR_NEWER
 using UnityEditor.Callbacks;
 
 namespace InsaneOne.Modifiers.Dev
@@ -28,3 +29,4 @@ namespace InsaneOne.Modifiers.Dev
 		}
 	}
 }
+#endif

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#if UNITY_5_3_OR_NEWER
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -27,7 +28,7 @@ namespace InsaneOne.Modifiers.Dev
 		static readonly float separator = 6f;
 		static readonly float groupIndicatorWidth = 3f;
 
-		static readonly List<string> textsCache = new List<string>();
+		static readonly List<string> textsCache = new ();
 
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
@@ -187,3 +188,4 @@ namespace InsaneOne.Modifiers.Dev
 			=> !UnityModifiersSettings.TryGetEditor(out var defaultMod) ? Color.white : defaultMod.GetEditorGroupColor(groupName);
 	}
 }
+#endif

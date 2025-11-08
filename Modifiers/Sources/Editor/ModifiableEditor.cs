@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#if UNITY_5_3_OR_NEWER
 using System.Collections.Generic;
 using System.Globalization;
 using UnityEditor;
@@ -117,3 +118,4 @@ namespace InsaneOne.Modifiers.Dev
 		}
 	}
 }
+#endif

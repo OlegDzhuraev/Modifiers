@@ -15,7 +15,6 @@
  */
 
 #if UNITY_5_3_OR_NEWER
-
 using System;
 using UnityEngine;
 
@@ -30,5 +29,4 @@ namespace InsaneOne.Modifiers.Processors
 		public override float Process(float value) => Curve.Evaluate(value);
 	}
 }
-
 #endif

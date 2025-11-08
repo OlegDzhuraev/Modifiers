@@ -1,3 +1,4 @@
+#if UNITY_5_3_OR_NEWER
 using System;
 using System.IO;
 
@@ -50,7 +51,7 @@ namespace InsaneOne.Modifiers
 
 			File.WriteAllText(Path.Combine(path, constPath, className + ".cs"), result);
 			
-#if UNITY_EDITOR
+#if UNITY_EDITOR // todo InsaneOne.Modifiers: wtf? It anyway can be ran only in editor...
 			UnityEditor.AssetDatabase.Refresh();
 			UnityEngine.Debug.Log("[Modifiers] Consts class was generated successfully.");
 #endif
@@ -64,3 +65,5 @@ namespace InsaneOne.Modifiers
 		}
 	}
 }
+
+#endif

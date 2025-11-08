@@ -46,5 +46,4 @@ namespace InsaneOne.Modifiers.Tools
 		}
 	}
 }
-
 #endif
