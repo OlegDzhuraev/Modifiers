@@ -15,6 +15,7 @@
  */
 
 #if UNITY_5_3_OR_NEWER
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -171,11 +172,11 @@ namespace InsaneOne.Modifiers.Dev
 
 			if (startsWith == "" || !UnityModifiersSettings.TryGetEditor(out var defaultMod))
 				return textsCache;
-			
+
 			var mods = defaultMod.SupportedParams;
 			
 			for (var i = 0; i < mods.Length; i++)
-				if (mods[i].Name.Contains(startsWith))
+				if (mods[i].Name.Contains(startsWith, StringComparison.InvariantCultureIgnoreCase))
 					textsCache.Add(mods[i].Name);
 			
 			return textsCache;
