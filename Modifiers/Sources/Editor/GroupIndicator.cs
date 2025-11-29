@@ -15,8 +15,27 @@
  */
 
 #if UNITY_5_3_OR_NEWER
-namespace InsaneOne.Modifiers
+using UnityEngine.UIElements;
+
+namespace InsaneOne.Modifiers.Dev
 {
-	public class ParamGroupAttribute : UnityEngine.PropertyAttribute { }
+	public class GroupIndicator : VisualElement
+	{
+		static readonly float Width = 3f;
+
+		string group;
+
+		public GroupIndicator()
+		{
+			style.minHeight = new Length(100, LengthUnit.Percent);
+			style.minWidth = Width;
+		}
+
+		public void SetGroup(string group)
+		{
+			this.group = group;
+			style.backgroundColor = ModifierAttributeDrawer.GetGroupColor(group);
+		}
+	}
 }
 #endif

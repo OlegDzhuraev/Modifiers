@@ -1,0 +1,30 @@
+.modifier-param-data
+{
+    flex-grow: 2;
+    align-items: stretch;
+    background-color: rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    padding: 4px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.unity-mods-settings-line
+{
+    flex-direction: row;
+    align-items: stretch;
+    width: 100%;
+}
+
+.unity-mods-settings-params-group
+{
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 2px 4px;
+    border-radius: 6px;
+    max-height: 650px;
+}
+
+.popup-style
+{
+
+}

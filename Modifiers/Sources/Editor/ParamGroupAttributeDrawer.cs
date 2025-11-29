@@ -15,55 +15,72 @@
  */
 
 #if UNITY_5_3_OR_NEWER
+using System.Collections.Generic;
 using UnityEditor;
-using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace InsaneOne.Modifiers.Dev
 {
 	[CustomPropertyDrawer(typeof(ParamGroupAttribute))]
 	public class ParamGroupAttributeDrawer : PropertyDrawer
 	{
-		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
+			var root = new VisualElement();
+			root.style.flexDirection = FlexDirection.Row;
+
 			if (!UnityModifiersSettings.TryGetEditor(out var settings))
 			{
-				GUI.Label(position, "No settings found!");
-				return;
+				root.Add(new HelpBox("No Modifier Settings found!", HelpBoxMessageType.Warning));
+				return root;
 			}
 
-			var groups = GetGroups(settings);
-			var index = 0;
+			var groupIndicator = new GroupIndicator();
+			groupIndicator.SetGroup(property.stringValue);
 
-			for (var i = 0; i < groups.Length; i++)
+			var popup = new PopupField<string>
 			{
-				var group = groups[i];
-				if (group.text == property.stringValue)
-					index = i;
+				tooltip = "You can define custom groups with unique color and other data.",
+				value = property.stringValue,
+				choices = GetGroups(settings),
+				style = { minWidth = 80, width = 140 },
+			};
+
+			popup.RegisterValueChangedCallback(OnPopupChanged);
+
+			Undo.undoRedoPerformed += RefreshAfterUndo;
+
+			root.RegisterCallback<DetachFromPanelEvent>(_ =>
+			{
+				Undo.undoRedoPerformed -= RefreshAfterUndo;
+			});
+
+			root.Add(groupIndicator);
+			root.Add(popup);
+
+			return root;
+
+			void OnPopupChanged(ChangeEvent<string> evt)
+			{
+				property.stringValue = evt.newValue;
+				groupIndicator.SetGroup(property.stringValue);
+				property.serializedObject.ApplyModifiedProperties();
 			}
 
-			var content = new GUIContent("Group", "You can define custom groups with unique color and other data.");
-
-			var style = new GUIStyle(EditorStyles.popup);
-
-			ModifierAttributeDrawer.DrawGroupIndicator(position, property.stringValue);
-
-			index = EditorGUI.Popup(position, content, index, groups, style);
-
-			if (index >= 0 && index < groups.Length)
-				property.stringValue = groups[index].text;
+			void RefreshAfterUndo()
+			{
+				property.serializedObject.Update();
+				popup.SetValueWithoutNotify(property.stringValue);
+				groupIndicator.SetGroup(property.stringValue);
+			}
 		}
 
-		GUIContent[] GetGroups(UnityModifiersSettings settings)
+		static List<string> GetGroups(UnityModifiersSettings settings)
 		{
-			var result = new GUIContent[settings.ParamGroups.Count + 1];
+			var result = new List<string> { new ("None") };
 
-			result[0] = new GUIContent("None");
-
-			for (var i = 1; i < settings.ParamGroups.Count + 1; i++)
-			{
-				var settingsParamGroup = settings.ParamGroups[i - 1];
-				result[i] = new GUIContent(settingsParamGroup.Name);
-			}
+			foreach (var group in settings.ParamGroups)
+				result.Add(group.Name);
 
 			return result;
 		}
