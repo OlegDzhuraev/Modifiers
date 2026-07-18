@@ -15,6 +15,7 @@
  */
 
 #if UNITY_5_3_OR_NEWER
+using UnityEditor;
 using UnityEditor.Callbacks;
 
 namespace InsaneOne.Modifiers.Dev
@@ -24,8 +25,8 @@ namespace InsaneOne.Modifiers.Dev
 		[DidReloadScripts]
 		static void Initialize()
 		{
-			if (!UnityModifiersSettings.TryGetEditor(out _))
-				ModifiersInitializeWindow.ShowWindow();
+			if (!UnityModifiersSettings.TryGetEditor(out _) && !SessionState.GetBool(ModifiersInitializeWindow.DismissedSessionKey, false))
+				EditorApplication.delayCall += ModifiersInitializeWindow.ShowWindow;
 		}
 	}
 }

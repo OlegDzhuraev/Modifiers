@@ -22,13 +22,16 @@ namespace InsaneOne.Modifiers.Dev
 {
 	public class ModifiersInitializeWindow : EditorWindow
 	{
+		public const string DismissedSessionKey = "InsaneOne.Modifiers.Setup.Dismissed";
+
 		[MenuItem("Tools/InsaneOne Modifiers/Initial setup...", priority = 0)]
 		public static void ShowWindow()
 		{
-			var wnd = GetWindow<ModifiersInitializeWindow>();
+			var wnd = CreateInstance<ModifiersInitializeWindow>();
 			wnd.titleContent = new GUIContent("Modifiers Setup");
 			wnd.minSize = new Vector2(340, 64);
 			wnd.maxSize = new Vector2(340, 128);
+			wnd.ShowModal();
 		}
 
 		[MenuItem("Tools/InsaneOne Modifiers/Generate constants", priority = 9999)]
@@ -55,8 +58,16 @@ namespace InsaneOne.Modifiers.Dev
 				Init();
 
 			GUI.color = prevColor;
+
+			if (GUILayout.Button("Dismiss in current session"))
+				Dismiss();
 		}
 
+		void Dismiss()
+		{
+			SessionState.SetBool(DismissedSessionKey, true);
+			Close();
+		}
 
 		void Init()
 		{
