@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#if UNITY_5_3_OR_NEWER
 namespace InsaneOne.Modifiers.Buffs
 {
 	public class BuffTimer
@@ -28,3 +29,4 @@ namespace InsaneOne.Modifiers.Buffs
 		}
 	}
 }
+#endif

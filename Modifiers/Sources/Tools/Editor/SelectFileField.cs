@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#if UNITY_5_3_OR_NEWER
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -58,3 +59,4 @@ namespace InsaneOne.UIElements
 		}
 	}
 }
+#endif

@@ -50,6 +50,6 @@ namespace InsaneOne.Modifiers
 			this.modifier = modifier;
 			UnityEditor.EditorUtility.SetDirty(this);
 		}
-	}
 #endif
+	}
 }

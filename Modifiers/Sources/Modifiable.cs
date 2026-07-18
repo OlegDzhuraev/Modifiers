@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+#if UNITY_5_3_OR_NEWER
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -108,6 +108,7 @@ namespace InsaneOne.Modifiers
 		public void SubTo(string type, ModifierChangedCallback action) => baseModifier.Observer.SubTo(type, action);
 		public void UnsubFrom(string type, ModifierChangedCallback action) => baseModifier.Observer.UnsubFrom(type, action);
 
+#if INSANEONE_MODIFIERS_UNITY_EXTENSION
 		public static void TransferModifiers(GameObject to, GameObject from, List<string> modifiersTypes, bool ignoreZeroes = true)
 		{
 			foreach (var modType in modifiersTypes)
@@ -120,6 +121,7 @@ namespace InsaneOne.Modifiers
 				to.SetModifierValue(modType, value);
 			}
 		}
+#endif
 
 #if UNITY_EDITOR
 		/// <summary> Editor only feature. </summary>
@@ -162,3 +164,4 @@ namespace InsaneOne.Modifiers
 		}
 	}
 }
+#endif

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#if UNITY_5_3_OR_NEWER
 using System;
 using System.IO;
 using InsaneOne.UIElements;
@@ -38,7 +39,7 @@ namespace InsaneOne.Modifiers.Tools
 		CsvSerializer csvSerializer;
 		CsvParamGroupsSerializer csvGroupsSerializer;
 
-		[MenuItem("Tools/InsaneOne Modifiers/CSV Tools...")]
+		[MenuItem("Tools/InsaneOne Modifiers/CSV Tools...", priority = 300)]
 		public static void Init()
 		{
 			var window = (UnityCsvWindow)GetWindow(typeof(UnityCsvWindow));
@@ -217,3 +218,4 @@ namespace InsaneOne.Modifiers.Tools
 		static string MakeRandomId() => $"rid_{Random.Range(0, 9999)}";
 	}
 }
+#endif

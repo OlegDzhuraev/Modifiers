@@ -24,11 +24,13 @@ namespace InsaneOne.Modifiers
 	{
 		public string Name;
 
+#if UNITY_5_3_OR_NEWER
 		[ParamGroup]
+#endif
 		public string Group;
 
 #if UNITY_5_3_OR_NEWER && INSANEONE_MODIFIERS_FANCY_FORMAT
-		public UnityEngine.UI.Image Icon;
+		public UnityEngine.Sprite Icon;
 		public string TextMeshIconId;
 		public string Description;
 #endif

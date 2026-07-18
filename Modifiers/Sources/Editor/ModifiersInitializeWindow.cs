@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#if UNITY_5_3_OR_NEWER
 using UnityEditor;
 using UnityEngine;
 
@@ -21,7 +22,7 @@ namespace InsaneOne.Modifiers.Dev
 {
 	public class ModifiersInitializeWindow : EditorWindow
 	{
-		[MenuItem("Tools/InsaneOne Modifiers/Initial setup...")]
+		[MenuItem("Tools/InsaneOne Modifiers/Initial setup...", priority = 0)]
 		public static void ShowWindow()
 		{
 			var wnd = GetWindow<ModifiersInitializeWindow>();
@@ -29,6 +30,9 @@ namespace InsaneOne.Modifiers.Dev
 			wnd.minSize = new Vector2(340, 64);
 			wnd.maxSize = new Vector2(340, 128);
 		}
+
+		[MenuItem("Tools/InsaneOne Modifiers/Generate constants", priority = 9999)]
+		public static void MenuGenerateConstants() => ConstsGenerator.Generate();
 
 		void OnGUI()
 		{
@@ -71,3 +75,4 @@ namespace InsaneOne.Modifiers.Dev
 		}
 	}
 }
+#endif
