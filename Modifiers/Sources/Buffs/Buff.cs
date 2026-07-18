@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+
+#if UNITY_5_3_OR_NEWER
+
 using UnityEngine;
 
 namespace InsaneOne.Modifiers.Buffs
@@ -31,3 +34,5 @@ namespace InsaneOne.Modifiers.Buffs
         public int MaxStacks => maxStacks;
     }
 }
+
+#endif

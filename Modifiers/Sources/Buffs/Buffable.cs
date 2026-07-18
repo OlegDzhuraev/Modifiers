@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#if UNITY_5_3_OR_NEWER && INSANEONE_MODIFIERS_UNITY_EXTENSION
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -87,3 +88,5 @@ namespace InsaneOne.Modifiers.Buffs
 		}
 	}
 }
+
+#endif
