@@ -1,3 +1,5 @@
+![GitHub License](https://img.shields.io/github/license/OlegDzhuraev/Modifiers) ![Static Badge](https://img.shields.io/badge/unity%20version-2023%2B-blue) ![GitHub package.json version](https://img.shields.io/github/package-json/v/OlegDzhuraev/Modifiers)
+
 # Modifiers extension
 Easily make flexible parameters for your characters, items, abilities, buffs in Unity.
 
