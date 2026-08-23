@@ -79,8 +79,10 @@ namespace InsaneOne.Modifiers.Dev
 		{
 			var dict = new Dictionary<string, ModifierParam>();
 
+			// Parameters list is user-editable in the Inspector, so duplicate Type entries are possible -
+			// overwrite instead of throwing, to keep this debug view from breaking the whole inspector.
 			foreach (var modifierParam in parameters)
-				dict.Add(modifierParam.Type, modifierParam);
+				dict[modifierParam.Type] = modifierParam;
 
 			DrawModifierValues(title, dict);
 		}

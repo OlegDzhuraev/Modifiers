@@ -28,21 +28,24 @@ namespace InsaneOne.Modifiers
 		
 		public string ParamType { get; }
 		public float Value { get; }
-		public bool IsExclude { get; private set; }
+		public bool IsExclude { get; }
 
 		float compareTolerance = 0.01f;
 
-		readonly List<GameObject> all = new ();
+		// HashSet, not List: UpdateAll/InjectInAll/RemoveAll do Contains/Add/Remove on this for every value
+		// change on every tracked Modifiable, so this needs O(1) membership ops rather than a linear scan.
+		readonly HashSet<GameObject> all = new ();
 		readonly List<GameObject> activeResults = new ();
-		
-		Filter(string param, float value)
+
+		Filter(string param, float value, bool isExclude)
 		{
 			ParamType = param;
 			Value = value;
+			IsExclude = isExclude; // must be set before populating all, IsMatchesFilter below depends on it
 
-			var results = Modifiable.FindAllWith(param, value, compareTolerance);
-			foreach (var go in results)
-				all.Add(go);
+			foreach (var (go, modifiable) in Modifiable.all)
+				if (IsMatchesFilter(this, modifiable.GetValue(param)))
+					all.Add(go);
 
 			filters.Add(this);
 		}
@@ -65,20 +68,23 @@ namespace InsaneOne.Modifiers
 				if (param.Type != filter.ParamType)
 					continue;
 
-				if (IsMatchesFilter(filter, go) && !filter.all.Contains(go))
-					filter.all.Add(go);
-				else if (!IsMatchesFilter(filter, go) && filter.all.Contains(go))
-					filter.all.Remove(go);
+				if (IsMatchesFilter(filter, go))
+					filter.all.Add(go); // no-op (returns false) if already present
+				else
+					filter.all.Remove(go); // no-op (returns false) if not present
 			}
 		}
 
 		public static Filter Make(string type, float value, bool isExclude = false)
 		{
+			// Reuse an existing filter only if it was defined identically - checking whether `value` currently
+			// satisfies the candidate filter's own predicate would ignore a mismatched IsExclude and could hand
+			// back a filter with the opposite semantics from the ones requested here.
 			foreach (var filter in filters)
-				if (filter.ParamType == type && IsMatchesFilter(filter, value))
+				if (filter.ParamType == type && filter.IsExclude == isExclude && Math.Abs(filter.Value - value) < filter.compareTolerance)
 					return filter;
-			
-			return new Filter(type, value) {IsExclude = isExclude};
+
+			return new Filter(type, value, isExclude);
 		}
 
 		internal static void RemoveAll(GameObject go)
@@ -90,8 +96,8 @@ namespace InsaneOne.Modifiers
 		internal static void InjectInAll(GameObject go)
 		{
 			foreach (var filter in filters)
-				if (IsMatchesFilter(filter, go) && !filter.all.Contains(go))
-					filter.all.Add(go);
+				if (IsMatchesFilter(filter, go))
+					filter.all.Add(go); // no-op (returns false) if already present
 		}
 
 		static bool IsMatchesFilter(Filter filter, GameObject go)

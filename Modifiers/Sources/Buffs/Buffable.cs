@@ -48,8 +48,8 @@ namespace InsaneOne.Modifiers.Buffs
 
 				if (timer.TimeLeft <= 0)
 				{
-					RemoveBuff(timer.Buff);
 					buffTimers.RemoveAt(i);
+					RemoveBuffInternal(timer.Buff);
 				}
 			}
 		}
@@ -79,11 +79,22 @@ namespace InsaneOne.Modifiers.Buffs
 			return stacks;
 		}
 
+		/// <summary> Removes a single stack of the buff. If it still has an active timer (e.g. this stack was removed
+		/// externally, before its timer expired), that timer is removed too, so it won't fire an extra removal later. </summary>
 		public void RemoveBuff(Buff buff)
+		{
+			RemoveBuffInternal(buff);
+
+			var orphanedTimer = buffTimers.Find(t => t.Buff == buff);
+			if (orphanedTimer != null)
+				buffTimers.Remove(orphanedTimer);
+		}
+
+		void RemoveBuffInternal(Buff buff)
 		{
 			modifiable.Remove(buff.Modifier);
 			buffs.Remove(buff);
-			
+
 			BuffRemoved?.Invoke(buff);
 		}
 	}

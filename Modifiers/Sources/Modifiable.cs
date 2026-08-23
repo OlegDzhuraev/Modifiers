@@ -66,6 +66,8 @@ namespace InsaneOne.Modifiers
 		{
 			baseModifier.Add(modifier);
 			modifiers.Add(modifier);
+
+			NotifyFiltersChanged(modifier);
 			WasChanged?.Invoke();
 		}
 
@@ -73,17 +75,21 @@ namespace InsaneOne.Modifiers
 		{
 			if (!modifiers.Contains(modifier))
 				return;
-			
+
 			baseModifier.Remove(modifier);
 
 			modifiers.Remove(modifier);
+
+			NotifyFiltersChanged(modifier);
 			WasChanged?.Invoke();
 		}
-		
+
 		/// <summary> Sets value to the specified field. Overrides all applied modifiers (can cause wrong results if you will remove some added modifiers after setting custom value, so, be careful). </summary>
 		public void SetValue(string type, float value)
 		{
 			baseModifier.SetValue(type, value);
+
+			Filter.UpdateAll(gameObject, new ModifierParam { Type = type });
 			WasChanged?.Invoke();
 		}
 
@@ -92,6 +98,15 @@ namespace InsaneOne.Modifiers
 		{
 			var currentValue = GetValue(type);
 			SetValue(type, currentValue + value);
+		}
+
+		/// <summary> Re-checks every registered Filter for the parameter types this modifier touches, so filters
+		/// stay in sync when a modifier is added/removed after they were created (Filter.Value itself is not read
+		/// here - Filter.UpdateAll re-fetches the current value from this Modifiable). </summary>
+		void NotifyFiltersChanged(Modifier modifier)
+		{
+			foreach (var param in modifier.Parameters)
+				Filter.UpdateAll(gameObject, new ModifierParam { Type = param.Type });
 		}
 
 		public float GetValue(string type)

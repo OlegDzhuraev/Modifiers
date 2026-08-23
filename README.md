@@ -77,7 +77,7 @@ You can create your own buff class (derived from Buff) and add there your info, 
 
 ## Code usage
 
-In order to use this package, you need to add scripting define symbol `INSANEONE_UNITY_MODIFIERS_EXTENSION` to the **Project Settings**. 
+In order to use this package, you need to add scripting define symbol `INSANEONE_MODIFIERS_UNITY_EXTENSION` to the **Project Settings**. 
 It enables extension methods for GameObject class and **ModifiableBehaviour** class, used as shortcut to modifiers methods.
 
 You also can skip this and use package without this define, but it not so handy and examples will not work.

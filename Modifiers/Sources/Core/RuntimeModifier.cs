@@ -72,7 +72,14 @@ namespace InsaneOne.Modifiers
 			var modifierParams = modifier.Parameters;
 
 			foreach (var param in modifierParams)
-				SetValue(param.Type, initializedParams[param.Type].Value - param.Value);
+			{
+				// Type may be missing here if it was added to the modifier's Parameters after it was already
+				// applied (e.g. via SetParamValue) - nothing to subtract for it in that case, so skip it.
+				if (!initializedParams.TryGetValue(param.Type, out var existing))
+					continue;
+
+				SetValue(param.Type, existing.Value - param.Value);
+			}
 		}
 
 		/// <summary> Sets value to the specified field. Overrides all applied modifiers (can cause wrong results if you will remove some added modifiers after setting custom value, so, be careful). </summary>
